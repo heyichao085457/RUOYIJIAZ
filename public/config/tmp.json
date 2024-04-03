@@ -1,0 +1,458 @@
+{
+    "msg": "操作成功",
+    "code": 200,
+    "data": {
+        "freckleGeomList": [
+            {
+                "center": null,
+                "freckleCode": "SX6108022023060807050700",
+                "geom": null
+            }
+        ],
+        "attributes": [
+            {
+                "name": "系统填报信息",
+                "url": null,
+                "id": 172,
+                "editable": false,
+                "fields": [
+                    {
+                        "fieldName": "行政区代码",
+                        "fieldAlias": "行政区代码",
+                        "fieldValue": "610802",
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "ssqx",
+                        "fieldAlias": "所属区域",
+                        "fieldValue": "榆林市榆阳区",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "landCode",
+                        "fieldAlias": "地块编号",
+                        "fieldValue": "610802202305190013",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "freckleCode",
+                        "fieldAlias": "图斑编号",
+                        "fieldValue": "SX6108022023060807050700",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "下发时间",
+                        "fieldAlias": "下发时间",
+                        "fieldValue": "2023-04-07T00:00:00.000+0800",
+                        "type": "date",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "判定类型",
+                        "fieldAlias": "系统填报判定类型",
+                        "fieldValue": "违法",
+                        "type": "radio",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "监测面积",
+                        "fieldAlias": "监测面积(亩)",
+                        "fieldValue": 1.80,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "地类认定耕地面积",
+                        "fieldAlias": "耕地面积(亩)",
+                        "fieldValue": 0.00,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "地类认定农用地面积",
+                        "fieldAlias": "基本农田面积(亩)",
+                        "fieldValue": 0.00,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "图斑分类",
+                        "fieldAlias": "图斑分类",
+                        "fieldValue": "新增非农建设类",
+                        "type": "radio",
+                        "values": [
+                            "新增非农建设类",
+                            "其他新增建设类",
+                            "年度内持续变化类"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "无手续卫片地类认定耕地面积",
+                        "fieldAlias": "无手续耕地面积",
+                        "fieldValue": 0.00,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "批复套合面积",
+                        "fieldAlias": "系统批地套合面积",
+                        "fieldValue": 1.80,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "批复套合比例",
+                        "fieldAlias": "系统批地套合比例(%)",
+                        "fieldValue": 100.00,
+                        "type": "numeric",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "系统判定依据说明",
+                        "fieldAlias": "系统判定依据说明",
+                        "fieldValue": "一大队-大河塔镇西尧则村施美佳生物公司用地",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "省级内业审核结论",
+                        "fieldAlias": "省级内业审核结论",
+                        "fieldValue": "通过",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "省级内业审核意见",
+                        "fieldAlias": "省级内业审核意见",
+                        "fieldValue": "通过",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    }
+                ]
+            },
+            {
+                "name": "问题图斑信息",
+                "url": "http://124.114.203.222:8084/wpzf/problemPatch/updateProblemPatch",
+                "id": 172,
+                "editable": true,
+                "fields": [
+                    {
+                        "fieldName": "cancelStatus",
+                        "fieldAlias": "销号状态",
+                        "fieldValue": "已销号",
+                        "type": "radio",
+                        "values": [
+                            "未销号",
+                            "已销号",
+                            "转违法"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "cancelDate",
+                        "fieldAlias": "销号时间",
+                        "fieldValue": "2023-12-06T16:52:52.000+0800",
+                        "type": "DATE",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "cancelBy",
+                        "fieldAlias": "销号人",
+                        "fieldValue": "测试",
+                        "type": "test",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "cancelReason",
+                        "fieldAlias": "销号原因",
+                        "fieldValue": "12345678",
+                        "type": "test",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "remarks",
+                        "fieldAlias": "备注",
+                        "fieldValue": null,
+                        "type": "test",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": true
+                    }
+                ]
+            },
+            {
+                "name": "外业核查信息",
+                "url": "http://124.114.203.222:8084/wpzf/fieldCheck/updateOutsideCheck",
+                "id": 457,
+                "editable": true,
+                "fields": [
+                    {
+                        "fieldName": "checkJobName",
+                        "fieldAlias": "核查工作名称",
+                        "fieldValue": "fdsfds3213",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "entryName",
+                        "fieldAlias": "项目名称",
+                        "fieldValue": "不转ceshic图斑范围内种植的山药，高约1.7米，两垄为一组搭架，每垄都有延垄走向的细水管，每间隔50米左右布置一条粗水管。现场发现部分位置水管之间断开，现场推断灌溉已结束。eshiceshi违法",
+                        "type": "text",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "checkMethod",
+                        "fieldAlias": "核查方式",
+                        "fieldValue": "外业核查",
+                        "type": "radio",
+                        "values": [
+                            "外业核查",
+                            "互联网+",
+                            "集中举证",
+                            "百亩大图斑"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "checkDate",
+                        "fieldAlias": "核查日期",
+                        "fieldValue": null,
+                        "type": "date",
+                        "values": null,
+                        "hierarchicalValues": null,
+                        "editable": false
+                    },
+                    {
+                        "fieldName": "checkDetermineResult",
+                        "fieldAlias": "核查后判定结果",
+                        "fieldValue": "其他",
+                        "type": "radio",
+                        "values": [
+                            "合法",
+                            "违法",
+                            "其他"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "illegalityType",
+                        "fieldAlias": "违法类型",
+                        "fieldValue": "转非农建设违法",
+                        "type": "radio",
+                        "values": [
+                            "不转违法",
+                            "转非粮化违法",
+                            "转非农建设违法"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "deductionType",
+                        "fieldAlias": "扣减类型",
+                        "fieldValue": "未供即用",
+                        "type": "radio",
+                        "values": [
+                            "未供即用",
+                            "补办用地",
+                            "中省重点工程",
+                            "拆除复耕"
+                        ],
+                        "hierarchicalValues": null,
+                        "editable": true
+                    },
+                    {
+                        "fieldName": "actualUse",
+                        "fieldAlias": "实际用途",
+                        "fieldValue": "机场用地",
+                        "type": "select",
+                        "values": null,
+                        "hierarchicalValues": [
+                            {
+                                "name": "耕地",
+                                "children": [
+                                    "水田",
+                                    "水浇地"
+                                ]
+                            },
+                            {
+                                "name": "园地",
+                                "children": [
+                                    "果园",
+                                    "茶园",
+                                    "橡胶园",
+                                    "其他园地"
+                                ]
+                            },
+                            {
+                                "name": "林地",
+                                "children": [
+                                    "乔木林地",
+                                    "竹林地",
+                                    "红树林地",
+                                    "森林沼泽",
+                                    "灌木林地",
+                                    "灌丛沼泽",
+                                    "其他林地"
+                                ]
+                            },
+                            {
+                                "name": "草地",
+                                "children": [
+                                    "天然牧草地",
+                                    "沼泽草地",
+                                    "人工牧草地",
+                                    "其他草地"
+                                ]
+                            },
+                            {
+                                "name": "商服用地",
+                                "children": [
+                                    "零售商业用地",
+                                    "批发市场用地",
+                                    "餐饮用地",
+                                    "旅馆用地",
+                                    "商务金融用地",
+                                    "娱乐用地",
+                                    "其他商服用地"
+                                ]
+                            },
+                            {
+                                "name": "工矿仓储用地",
+                                "children": [
+                                    "工业用地",
+                                    "采矿用地",
+                                    "盐田",
+                                    "仓储用地"
+                                ]
+                            },
+                            {
+                                "name": "住宅用地",
+                                "children": [
+                                    "城镇住宅用地",
+                                    "农村宅基地"
+                                ]
+                            },
+                            {
+                                "name": "公共管理与公共服务用地",
+                                "children": [
+                                    "机关团体用地",
+                                    "新闻出版用地",
+                                    "教育用地",
+                                    "医疗卫生用地",
+                                    "社会福利用地",
+                                    "文化设施用地",
+                                    "体育用地",
+                                    "公用设施用地",
+                                    "公园与绿地"
+                                ]
+                            },
+                            {
+                                "name": "特殊用地",
+                                "children": [
+                                    "军事设施用地",
+                                    "使领馆用地",
+                                    "监教场所用地",
+                                    "宗教用地",
+                                    "殡葬用地",
+                                    "风景名胜设施用地"
+                                ]
+                            },
+                            {
+                                "name": "交通运输用地",
+                                "children": [
+                                    "铁路用地",
+                                    "轨道交通用地",
+                                    "公路用地",
+                                    "城镇村道路用地",
+                                    "交通服务场站用地",
+                                    "农村道路",
+                                    "机场用地",
+                                    "港口码头用地",
+                                    "管道运输用地"
+                                ]
+                            },
+                            {
+                                "name": "水域及水利设施用地",
+                                "children": [
+                                    "河流水面",
+                                    "湖泊水面",
+                                    "水库水面",
+                                    "坑塘水面",
+                                    "沿海滩涂",
+                                    "内陆滩涂",
+                                    "沟渠",
+                                    "沼泽地",
+                                    "水工建筑用地",
+                                    "冰川及永久积雪"
+                                ]
+                            },
+                            {
+                                "name": "其他土地",
+                                "children": [
+                                    "空闲地",
+                                    "设施农用地",
+                                    "田坎",
+                                    "盐碱地",
+                                    "沙地",
+                                    "裸土地",
+                                    "裸岩石砾地"
+                                ]
+                            }
+                        ],
+                        "editable": true
+                    }
+                ]
+            }
+        ]
+    }
+}

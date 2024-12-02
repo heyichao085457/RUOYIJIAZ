@@ -10,17 +10,21 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const name = process.env.VUE_APP_TITLE || '若依管理系统' // 网页标题
 
 const port = process.env.port || process.env.npm_config_port || 80 // 端口
-
+const Cookies = require('js-cookie');
+const result = Cookies.get("result");
+// console.log(result, ' http://localhost:8081/');
 // vue.config.js 配置说明
 //官方vue.config.js 参考文档 https://cli.vuejs.org/zh/config/#css-loaderoptions
 // 这里只列一部分，具体配置参考文档
+
 module.exports = {
   // 部署生产环境和开发环境下的URL。
   // 默认情况下，Vue CLI 会假设你的应用是被部署在一个域名的根路径上
   // 例如 https://www.ruoyi.vip/。如果应用被部署在一个子路径上，你就需要用这个选项指定这个子路径。例如，如果你的应用被部署在 https://www.ruoyi.vip/admin/，则设置 baseUrl 为 /admin/。
-  publicPath: process.env.NODE_ENV === 'production' ? '/wpzf/' : '/',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+
   // 在npm run build 或 yarn build 时 ，生成文件的目录名称（要和baseUrl的生产环境路径一致）（默认dist）
-  outputDir: '/wpzf/',
+  outputDir: 'dist',
   // 用于放置生成的静态资源 (js、css、img、fonts) 的；（项目打包之后，静态资源会放在这个文件夹下）
   assetsDir: 'static',
   // 是否开启eslint保存检测，有效值：ture | false | 'error'
@@ -28,23 +32,74 @@ module.exports = {
   // 如果你不需要生产环境的 source map，可以将其设置为 false 以加速生产环境构建。
   productionSourceMap: false,
   // webpack-dev-server 相关配置
+  // : `http://192.168.1.103`,
+  // http://124.114.203.222:8084/wpzf/
+  // http://10.0.34.5:8084/wp/#/Databig
+
   devServer: {
-    host: 'localhost',
+    host: '0.0.0.0',
     port: 8081,
     open: true,
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: process.env.NODE_ENV === 'production'
-          ? `http://124.114.203.222:8084/wpzf/`
-          : `http://192.168.0.1:80`,
+        target: 'http://192.168.1.103',
         changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+        pathRewrite: function (path, req) {
+          const host = req.headers.host;
+          if (host.includes('124.114.203.222:8084')) {
+            const newPath = path.replace(process.env.VUE_APP_BASE_API, '/wpzf');
+            return newPath;
+          } else if (host.includes('10.0.34.5:8084')) {
+            const newPath = path.replace(process.env.VUE_APP_BASE_API, '/wp');
+            return newPath;
+          } else {
+            return path;
+          }  
+        },
+        router: function (req) {
+          const host = req.headers.host;
+          if (host.includes('124.114.203.222:8084')) {
+            return 'http://124.114.203.222:8084';
+          } else if (host.includes('10.0.34.5:8084')) {
+            return 'http://10.0.34.5:8084';
+          } else {
+            return 'http://192.168.1.103';
+          }
         }
-      }
+      },
     },
     disableHostCheck: true
   },
+
+                                    
+
+  // devServer: {
+  //   host: 'localhost',
+  //   port: 8081,
+  //   open: true,
+  //   proxy: {
+  //     [process.env.VUE_APP_BASE_API]: {
+  //       target: process.env.NODE_ENV === 'production'
+  //         ? `http://124.114.203.222:8084`
+  //         : `http://192.168.1.103`,
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         ['^' + process.env.VUE_APP_BASE_API]: ''
+  //       }
+  //     },
+  //     '/img': {
+  //       target: 'http://124.114.203.222:8084', // 目标地址
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/img': ''
+  //       }
+  //     },
+  //   },
+  //   disableHostCheck: true
+  // },
+
+
+
   css: {
     loaderOptions: {
       sass: {
@@ -73,7 +128,19 @@ module.exports = {
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
-
+    config.module
+      .rule('vue')
+      .test(/\.vue$/)
+      .use('style-vw-loader')
+      .loader('style-vw-loader')
+      .options({
+        unitToConvert: 'px',  // 需要转换的单位，默认为"px"
+        viewportWidth: 1920, // 设计稿的视口宽度
+        unitPrecision: 5, // 单位转换后保留的精度
+        viewportUnit: 'vw', // 希望使用的视口单位
+        fontViewportUnit: 'vw', // 字体使用的视口单位
+        minPixelValue: 1 // 最小的转换数值，如果为1的话，只有大于1的值会被转换
+      });
     // set svg-sprite-loader
     config.module
       .rule('svg')

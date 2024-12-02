@@ -44,9 +44,18 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/Allplots',
+    component: () => import('@/views/Cromver/Allplots.vue'),
+    hidden: true
+  },
+  {
     path: '/login',
     component: () => import('@/views/login'),
     hidden: true
+  },
+  {
+    path: '/map_multiScreen',
+    component: () => import('@/views/map_multiScreen'),
   },
   {
     path: '/homepage',
@@ -63,28 +72,266 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/Enforcementxiang',
+    component: () => import('@/views/Enforcementxiang/Enforcementxiang.vue'),
+    hidden: true
+  },
+  {
+    path: '/Fieldxiang',
+    component: () => import('@/views/Enforcementxiang/Fieldxiang.vue'),
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/error/404'),
     hidden: true
   },
   {
+    path: '/details',
+    component: () => import('@/views/details/detailsoi.vue'),
+    hidden: true
+  },
+
+  {
     path: '/401',
     component: () => import('@/views/error/401'),
     hidden: true
   },
+
+  {
+    path: '/details',
+    component: Layout,
+    children: [
+      {
+        path: 'details',
+        component: () => import('@/views/management/details.vue'),
+      }
+    ]
+  },
+  {
+    path: '/2023danggl',
+    component: Layout,
+    children: [
+      {
+        path: 'Dopefjsxiang',
+        component: () => import('@/views/2023danggl/Dopefjsxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/detailss',
+    component: Layout,
+    children: [
+      {
+        path: 'storagexiangs',
+        component: () => import('@/views/management/detailsxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Managementxiang2022',
+    component: Layout,
+    children: [
+      {
+        path: 'DataStorage2022xiang',
+        component: () => import('@/views/Managementxiang2022/DataStorage2022xiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/2023danggl',
+    component: Layout,
+    children: [
+      {
+        path: 'DataPoolxiang',
+        component: () => import('@/views/2023danggl/DataPoolxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Enforcementxiang',
+        component: () => import('@/views/Enforcementxiang/Enforcementxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Unresolvedxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Unresolvedxiang',
+        component: () => import('@/views/Unresolvedxiang/Unresolvedxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/verification',
+    component: Layout,
+    children: [
+      {
+        path: 'managementplusxiang',
+        component: () => import('@/views/verification/managementplusxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Fieldxiang',
+        component: () => import('@/views/Enforcementxiang/Fieldxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Distributexiang',
+        component: () => import('@/views/Enforcementxiang/Distributexiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/wttb_edit',
+    component: Layout,
+    children: [
+      {
+        path: 'fefr',
+        component: () => import('@/views/wttb_edit/fefr.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Concentratedxiang',
+        component: () => import('@/views/Enforcementxiang/Concentratedxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/details',
+    component: Layout,
+    children: [
+      {
+        path: 'detailsoi',
+        component: () => import('@/views/details/detailsoi.vue'),
+      }
+    ]
+  },
+  {
+    path: '/details',
+    component: Layout,
+    children: [
+      {
+        path: 'disposalinuxiang',
+        component: () => import('@/views/details/disposalinuxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/2022xiang',
+    component: Layout,
+    children: [
+      {
+        path: '2022FusionLedgerxiang',
+        component: () => import('@/views/2022xiang/2022FusionLedgerxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/2022xiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Allplotsin2022xiang',
+        component: () => import('@/views/2022xiang/Allplotsin2022xiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Managementxiang2022',
+    component: Layout,
+    children: [
+      {
+        path: 'Uploadattachmentsxiang',
+        component: () => import('@/views/Managementxiang2022/Uploadattachmentsxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Managementxiang2022',
+    component: Layout,
+    children: [
+      {
+        path: 'Illegaldisposal2022xiang',
+        component: () => import('@/views/Managementxiang2022/Illegaldisposal2022xiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/2022xiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Provincialverificationin2022xiang',
+        component: () => import('@/views/2022xiang/Provincialverificationin2022xiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Allplotsxiang',
+        component: () => import('@/views/Enforcementxiang/Allplotsxiang.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'Allplotsxiang2023',
+        component: () => import('@/views/Enforcementxiang/Allplotsxiang2023.vue'),
+      }
+    ]
+  },
+  {
+    path: '/Enforcementxiang',
+    component: Layout,
+    children: [
+      {
+        path: 'wyhc2023xiang',
+        component: () => import('@/views/Enforcementxiang/wyhc2023xiang.vue'),
+      }
+    ]
+  },
   {
     path: '',
     component: Layout,
-    redirect: 'index',
+    redirect: 'Databig',
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/index'),
-        name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true, keepAlive: true }
+        path: 'Databig',
+        component: () => import('../views/Databigscreen/Databig.vue'),
+        name: 'Databig',
+        meta: { title: '卫片执法数字大屏', icon: 'dashboard', affix: true, breadcrumb: false }
       },
     ]
   },
+
   {
     path: '/user',
     component: Layout,
@@ -99,10 +346,22 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        name: 'enforCement',
+        path: 'Cromver/enforCement',
+        component: () => import('../views/Cromver/enforCement.vue'),
+      }
+    ]
+  }
 ]
+
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
-
   {
     path: '/system/user-auth',
     component: Layout,
@@ -159,6 +418,7 @@ export const dynamicRoutes = [
       }
     ]
   },
+
   {
     path: '/tool/gen-edit',
     component: Layout,
@@ -175,7 +435,6 @@ export const dynamicRoutes = [
   },
 
 ]
-
 // 防止连续点击多次路由报错
 let routerPush = Router.prototype.push;
 let routerReplace = Router.prototype.replace;
@@ -188,9 +447,14 @@ Router.prototype.replace = function push(location) {
   return routerReplace.call(this, location).catch(err => err)
 }
 
+
+
+
 export default new Router({
   mode: 'hash', // 去掉url中的#
-  base: '/wpzf/',
+  base: '/',
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
+
+

@@ -407,7 +407,7 @@ export default {
       });
     },
     fetchData(item, password) {
-      console.log(item, "========");
+    
       this.defaultItem = item;
       this.$set(this.loadingStatus, item, true);
       if (!item) {

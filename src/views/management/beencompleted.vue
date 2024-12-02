@@ -1,17 +1,15 @@
 <template>
   <div class="app-title">
-    <div class="app-top">
-      <el-card class="box-card" v-for="(item, index) in Datacard" :key="index">
-        <img
-          src="../../assets/00.png"
-          alt=""
-          class="item-img"
-          @click="boxcardClick(index)"
-          v-loading="Datacardnayg"
-        />
-        <div class="item-name">{{ item.tdwpWjjName }}</div>
-      </el-card>
-    </div>
+    <el-card class="box-card" v-for="(item, index) in Datacard" :key="index">
+      <div class="box-div" @click="boxcardClick(index)">
+        <div>
+          <img src="../../assets/00.png" alt="" class="imgbox" />
+        </div>
+        <div class="item-name">
+          {{ item.tdwpWjjName }}
+        </div>
+      </div>
+    </el-card>
     <div class="pole">
       <el-dialog
         :visible.sync="hanClickorel"
@@ -47,13 +45,12 @@
               <el-table
                 :data="Datalongtow"
                 v-loading="loadingli"
-                border
                 style="width: 100%"
                 height="500"
                 @selection-change="handleSelectionChange"
               >
                 <el-table-column type="selection" width="55"> </el-table-column>
-                <el-table-column type="index" label="序号" width="200">
+                <el-table-column type="index" label="序号" width="80">
                 </el-table-column>
                 <el-table-column prop="tdwpName" label="附件名称" width="200">
                 </el-table-column>
@@ -77,14 +74,14 @@
           </el-main>
           <el-footer>
             <el-row :gutter="20">
-              <el-col :span="2">
+              <el-col :span="2" v-if="permissions['删除'] === 0">
                 <div class="contentbgpurple" @click="deleteClick">
                   <el-button class="contentbgpurple" type="danger"
                     >删除</el-button
                   >
                 </div>
               </el-col>
-              <el-col :span="2">
+              <el-col :span="2" v-if="permissions['上传'] === 0">
                 <div class="contentbgpurple" @click="UploadClick">
                   <el-button class="contentbgpurple" type="danger"
                     >上传</el-button
@@ -102,7 +99,7 @@
           <el-upload
             class="upload-demo"
             drag
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :action="uploadAction"
             multiple
             :on-success="handleUploadSuccess"
             :file-list="uploadedFileList"
@@ -154,7 +151,14 @@ export default {
       loadinger: false,
       uploadedFileList: [],
       selectedRows: [],
+      permissions: {},
     };
+  },
+  created() {
+    const storedPermissions = localStorage.getItem("permissions");
+    if (storedPermissions !== null) {
+      this.permissions = JSON.parse(storedPermissions);
+    }
   },
   mounted() {
     this.tdwpWjjListt();
@@ -162,6 +166,9 @@ export default {
   computed: {
     isSubmitDisabled() {
       return this.uploadedFiles.length === 0;
+    },
+    uploadAction() {
+      return `${process.env.VUE_APP_BASE_API}/TdwpWjj/upload/tdwpFile`;
     },
   },
   methods: {
@@ -222,8 +229,8 @@ export default {
         return;
       }
 
-      const ids = this.selectedRows.map((row) => row.id).join(",");
-      const data = { id: ids };
+      const ids = this.selectedRows.map((row) => ({ id: String(row.id) }));
+      const data = ids;
 
       updateTdwp(data)
         .then((ok) => {
@@ -256,6 +263,7 @@ export default {
         .then((ok) => {
           this.loadinger = true;
           if (ok.code === 200) {
+            this.uploadok = false;
             this.kcwpIdli();
             this.loadinger = false;
             this.uploadedFiles = [];
@@ -279,39 +287,22 @@ export default {
 
 <style scoped>
 .app-title {
-  height: 100%;
+  height: 90%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
 }
-.app-top {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 20px;
-  padding: 10px;
+.box-div {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
-
-.item-img {
-  height: 100%;
-  object-fit: cover;
-}
-.box-card {
-  height: 200px;
-  position: relative;
-}
-.item-name {
-  position: absolute;
-  bottom: 0;
-  margin: auto;
-  font-size: 14px;
-  width: 200px;
-  text-align: center;
-}
-.el-maindata {
-  position: relative;
+.imgbox {
+  height: 30px;
 }
 .box-card-er {
   width: 436px;
-  height: 320px;
+  height: 400px;
   z-index: 9999;
   position: absolute;
   top: 0;
@@ -324,7 +315,13 @@ export default {
   margin-left: 16px;
 }
 .clearfix-er {
+  margin-top: 10px;
   display: flex;
   justify-content: space-around;
+}
+.content-container {
+  width: 200px;
+  display: flex;
+  justify-content: space-evenly;
 }
 </style>

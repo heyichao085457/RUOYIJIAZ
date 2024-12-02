@@ -90,3 +90,11 @@ export function getCodeImg() {
     timeout: 20000
   })
 }
+
+export function buttonall(params) {
+  return request({
+    url: 'button/all',
+    method: 'get',
+    params: params,
+  })
+}

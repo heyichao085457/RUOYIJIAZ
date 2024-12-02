@@ -54,7 +54,7 @@ export default {
 
 .k-border {
   width: 211px;
-  border: 1px solid #ccc;
+  border: 1px solid #dcdcdc;
   border-radius: 5px;
 }
 </style>

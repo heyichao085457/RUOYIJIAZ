@@ -92,10 +92,14 @@
             <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
               >重置</el-button
             >
+            <el-button icon="el-icon-refresh" size="mini" @click="toggleStatus">
+              用户状态: {{ statusText }}
+            </el-button>
           </el-form-item>
         </el-form>
 
         <el-row :gutter="10" class="mb8">
+          <!-- v-hasPermi="['system:user:add']" -->
           <el-col :span="1.5">
             <el-button
               type="primary"
@@ -103,7 +107,6 @@
               icon="el-icon-plus"
               size="mini"
               @click="handleAdd"
-              v-hasPermi="['system:user:add']"
               >新增</el-button
             >
           </el-col>
@@ -115,7 +118,6 @@
               size="mini"
               :disabled="single"
               @click="handleUpdate"
-              v-hasPermi="['system:user:edit']"
               >修改</el-button
             >
           </el-col>
@@ -127,7 +129,6 @@
               size="mini"
               :disabled="multiple"
               @click="handleDelete"
-              v-hasPermi="['system:user:remove']"
               >删除</el-button
             >
           </el-col>
@@ -138,7 +139,6 @@
               icon="el-icon-upload2"
               size="mini"
               @click="handleImport"
-              v-hasPermi="['system:user:import']"
               >导入</el-button
             >
           </el-col>
@@ -149,7 +149,6 @@
               icon="el-icon-download"
               size="mini"
               @click="handleExport"
-              v-hasPermi="['system:user:export']"
               >导出</el-button
             >
           </el-col>
@@ -189,6 +188,22 @@
             v-if="columns[2].visible"
             :show-overflow-tooltip="true"
           />
+
+          <el-table-column
+            label="市"
+            align="center"
+            key="city"
+            prop="city"
+            :show-overflow-tooltip="true"
+          />
+          <el-table-column
+            label="区县"
+            align="center"
+            key="county"
+            prop="county"
+            :show-overflow-tooltip="true"
+          />
+
           <el-table-column
             label="部门"
             align="center"
@@ -243,7 +258,6 @@
                 type="text"
                 icon="el-icon-edit"
                 @click="handleUpdate(scope.row)"
-                v-hasPermi="['system:user:edit']"
                 >修改</el-button
               >
               <el-button
@@ -251,7 +265,6 @@
                 type="text"
                 icon="el-icon-delete"
                 @click="handleDelete(scope.row)"
-                v-hasPermi="['system:user:remove']"
                 >删除</el-button
               >
               <el-dropdown
@@ -263,16 +276,12 @@
                   >更多</el-button
                 >
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item
-                    command="handleResetPwd"
-                    icon="el-icon-key"
-                    v-hasPermi="['system:user:resetPwd']"
+                  <el-dropdown-item command="handleResetPwd" icon="el-icon-key"
                     >重置密码</el-dropdown-item
                   >
                   <el-dropdown-item
                     command="handleAuthRole"
                     icon="el-icon-circle-check"
-                    v-hasPermi="['system:user:edit']"
                     >分配角色</el-dropdown-item
                   >
                 </el-dropdown-menu>
@@ -499,6 +508,8 @@ import {
   resetUserPwd,
   changeUserStatus,
   deptTreeSelect,
+  normalk,
+  stopg,
 } from "@/api/system/user";
 import { getToken } from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
@@ -510,6 +521,7 @@ export default {
   components: { Treeselect },
   data() {
     return {
+      isOn: true,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -626,6 +638,11 @@ export default {
       this.$refs.tree.filter(val);
     },
   },
+  computed: {
+    statusText() {
+      return this.isOn ? "开" : "关";
+    },
+  },
   created() {
     this.getList();
     this.getDeptTree();
@@ -634,6 +651,21 @@ export default {
     });
   },
   methods: {
+    toggleStatus() {
+      this.isOn = !this.isOn;
+      if (this.isOn) {
+        normalk().then((ok) => {
+          // console.log(ok);rows,total
+          this.userList = ok.data.rows;
+          this.total = ok.data.total;
+        });
+      } else {
+        stopg().then((ok) => {
+          this.userList = ok.data.rows;
+          this.total = ok.data.total;
+        });
+      }
+    },
     /** 查询用户列表 */
     getList() {
       this.loading = true;

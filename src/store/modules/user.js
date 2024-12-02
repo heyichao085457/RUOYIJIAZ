@@ -1,5 +1,6 @@
-import { login, logout, getInfo } from '@/api/login'
+import { login, logout, getInfo, buttonall } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
+import Cookies from 'js-cookie'
 
 const user = {
   state: {
@@ -54,9 +55,39 @@ const user = {
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
         getInfo().then(res => {
+
+
+          // const result = window.location.href.split('/wp');
+
+          // 获取 permissions 的第一个元素
+          const firstPermission = res.permissions[0];
+
+          // 将第一个权限存储到本地存储中
+          localStorage.setItem('firstPermission', firstPermission);
+          if (res.code == 200) {
+            // console.log(localStorage.getItem("firstPermission"), 'localStorage.getItem("firstPermission")');
+
+            let params = {
+              permissions: localStorage.getItem("firstPermission"),
+            };
+            buttonall(params).then((ok) => {
+              // console.log(ok, "okkk");
+              const permissions = ok.data['2023年卫片执法'];
+              console.log(permissions);
+              localStorage.setItem('permissions', JSON.stringify(permissions));
+            });
+          }
+          // Cookies.set('result', result[0], { expires: 1 })
           const user = res.user
-          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : process.env.VUE_APP_BASE_API + user.avatar;
+          const baseUrl = process.env.NODE_ENV === 'production' ? 'http://124.114.203.222:8084/wpzf/' : 'http://124.114.203.222:8084/wpzf/';
+          const parts = user.avatar.split('wpzf/');
+          let avatart = parts[1]
+          Cookies.set('userId', res.user.userId, { expires: 1 })
+          const avatar = (user.avatar == "" || user.avatar == null) ? require("@/assets/images/profile.jpg") : `${baseUrl}${avatart}`;
           if (res.roles && res.roles.length > 0) { // 验证返回的roles是否是一个非空数组
+            // console.log(res.user.userId, 'getInfo///');
+            // this.$cookies.set('userId', res.user.userId, { expires: '30d' });
+
             commit('SET_ROLES', res.roles)
             commit('SET_PERMISSIONS', res.permissions)
           } else {
@@ -76,6 +107,7 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
+          localStorage.removeItem('firstPermission');
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])

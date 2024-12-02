@@ -133,3 +133,45 @@ export function deptTreeSelect() {
     method: 'get'
   })
 }
+export function deptTreeSelectregister() {
+  return request({
+    url: 'register/dept',
+    method: 'get'
+  })
+}
+export function registersex() {
+  return request({
+    url: 'register/sex',
+    method: 'get'
+  })
+}
+
+
+export function registeregisterrsex() {
+  return request({
+    url: 'register/tree',
+    method: 'get'
+  })
+}
+
+export function zusersc(data) {
+  return request({
+    url: 'register/user',
+    method: 'post',
+    data: data
+  })
+}
+export function normalk() {
+  return request({
+      url: 'register/normal',
+      method: 'get',
+
+  });
+}
+export function stopg() {
+  return request({
+      url: 'register/stop',
+      method: 'get',
+
+  });
+}

@@ -1,12 +1,27 @@
 <template>
   <div class="login">
+    <div class="top">
+      <span>陕 西 省 卫 片 执 法 综 合 监 管 平 台 V2.0</span>
+    </div>
+    <div class="block">
+      <el-carousel autoplay indicator-position="none" class="el-carousel">
+        <el-carousel-item v-for="item in imgrow" :key="item">
+          <img
+            :src="item"
+            alt="Image"
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+
     <el-form
       ref="loginForm"
       :model="loginForm"
       :rules="loginRules"
       class="login-form"
     >
-      <h3 class="title">若依后台管理系统</h3>
+      <h3 class="title">平台数据仅限项目内部使用，严禁外泄！</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -70,7 +85,8 @@
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
-        <div style="float: right" v-if="register">
+        <div style="float: right">
+          <!-- /register -->
           <router-link class="link-type" :to="'/register'"
             >立即注册</router-link
           >
@@ -79,7 +95,7 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 ruoyi.vip All Rights Reserved.</span>
+      <span>版权所有：@自然资源陕西省卫星应用技术中心</span>
     </div>
   </div>
 </template>
@@ -90,9 +106,15 @@ import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
 
 export default {
-  name: "Login",
   data() {
     return {
+      imgrow: [
+        require("@/assets/logo/por1.jpg"),
+        require("@/assets/logo/por2.jpg"),
+        require("@/assets/logo/por3.jpg"),
+        require("@/assets/logo/por4.jpg"),
+        require("@/assets/logo/por5.jpg"),
+      ],
       codeUrl: "",
       loginForm: {
         username: "admin",
@@ -190,11 +212,31 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 .login {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  // align-items: center;
   height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
-  background-size: cover;
+  // background-image: url("../assets/pochen.jpg");
+  // background-size: cover;
+  .top {
+    height: 15%;
+    width: 100%;
+    text-align: center;
+    font-family: Arial;
+    line-height: 140px;
+    font-size: 40px;
+    font-weight: 900;
+  }
+}
+
+.block {
+  position: relative;
+  height: 70%;
+  .el-carousel {
+    height: 100% !important;
+    .el-carousel__container {
+      height: 100% !important;
+    }
+  }
 }
 .title {
   margin: 0px auto 30px auto;
@@ -203,6 +245,14 @@ export default {
 }
 
 .login-form {
+  position: absolute;
+  height: 350px;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 999;
   border-radius: 6px;
   background: #ffffff;
   width: 400px;
@@ -234,13 +284,12 @@ export default {
   }
 }
 .el-login-footer {
-  height: 40px;
-  line-height: 40px;
-  position: fixed;
-  bottom: 0;
+  height: 15%;
+  line-height: 150px;
+
   width: 100%;
   text-align: center;
-  color: #fff;
+
   font-family: Arial;
   font-size: 12px;
   letter-spacing: 1px;

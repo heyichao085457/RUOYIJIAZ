@@ -18,8 +18,17 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/icons' // icon
 import './permission' // permission control
 import { getDicts } from "@/api/system/dict/data";
+import VueCookies from 'vue-cookies';
 import { getConfigKey } from "@/api/system/config";
+import VueQuillEditor from 'vue-quill-editor'  //引入富文本编译器
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
 import { parseTime, resetForm, addDateRange, selectDictLabel, selectDictLabels, handleTree } from "@/utils/ruoyi";
+// import "babel-polyfill";
+// import promise from "es6-promise";
+import '../public/font/iconfont.css'
 // 分页组件
 import Pagination from "@/components/Pagination";
 // 自定义表格工具组件
@@ -40,7 +49,7 @@ import VueMeta from 'vue-meta'
 import DictData from '@/components/DictData'
 import VueCompositionApi from '@vue/composition-api';
 import 'mapbox-gl/dist/mapbox-gl.css';
-
+import dataV from '@jiaminghi/data-view'
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts
 Vue.prototype.getConfigKey = getConfigKey
@@ -65,7 +74,13 @@ Vue.use(directive)
 Vue.use(plugins)
 Vue.use(VueMeta)
 Vue.use(formCreate);
+Vue.use(dataV)
+Vue.use(VueQuillEditor);
 Vue.use(VueCompositionApi);
+Vue.use(VueCookies);
+
+// 可以设置默认配置
+
 DictData.install()
 
 /**

@@ -1,14 +1,20 @@
 <template>
   <div class="htmlheight">
-    <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item class="landCode" name="4">
+    <el-collapse v-model="activeNames" @change="handlebnsdgb">
+      <el-collapse-item class="landCode" name="listlandCode">
         <template #title>
           <el-button-group>
-            <el-button type="primary" icon="el-icon-arrow-left" @click="close"
-              >返回</el-button
+            <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-arrow-left"
+              @click="close"
+              >返回列表</el-button
             >
           </el-button-group>
-          图斑编辑(地块编号: {{ landCode }})
+          <span class="title-text"
+            >图斑编辑(地块编号: {{ landCode || listrow }})</span
+          >
         </template>
         <div class="rpouttr" v-show="activeSteprow">
           <el-steps
@@ -26,7 +32,7 @@
                   ? 'success'
                   : step.stepState == '0'
                   ? 'wait'
-                  : 'error '
+                  : 'error'
               "
               :description="horizontal"
             >
@@ -76,9 +82,10 @@
           >
             <el-tab-pane label="图斑信息" name="first">
               <div class="scrollable-tab-content">
-                <div v-if="!editData.length">
+                <div v-if="isEditDataEmpty">
                   <el-empty :image-size="200"></el-empty>
                 </div>
+
                 <div v-else>
                   <div
                     v-for="(item, index) in editData"
@@ -147,11 +154,7 @@
                             @click="onpreview(index)"
                           />
 
-                          <div
-                            class="showviewercolor"
-                            id="picviewer"
-                            style="position: relative"
-                          >
+                          <div class="showviewercolor" id="picviewer">
                             <el-image-viewer
                               v-if="showviewer"
                               :on-close="closeviewer"
@@ -160,9 +163,9 @@
                               :on-switch="handleImageChange"
                               style="
                                 width: 50%;
-                                height: 78%;
+                                height: 70%;
                                 margin-left: 49.7%;
-                                margin-top: 5%;
+                                margin-top: 9%;
                                 overflow: hidden;
                                 background-color: black;
                               "
@@ -172,29 +175,250 @@
                             <span>{{ item.uploadTime }}</span>
                           </div>
                         </div>
-                      </div>
 
-                      <div class="img-updaby" v-if="currentarr">
-                        <div>负责人:{{ perviewBottom.uploadBy }}</div>
-                        <div>拍摄时间：{{ perviewBottom.uploadTime }}</div>
-                        <div>
-                          位置：{{ perviewBottom.xcoordinate }},{{
-                            perviewBottom.ycoordinate
-                          }}
+                        <div class="img-updaby" v-if="currentarr">
+                          <div>负责人:{{ perviewBottom.uploadBy }}</div>
+                          <div>拍摄时间：{{ perviewBottom.uploadTime }}</div>
+                          <div>
+                            位置：{{ perviewBottom.xcoordinate }},{{
+                              perviewBottom.ycoordinate
+                            }}
+                          </div>
+                          <div>方位角：{{ perviewBottom.azimuth }}°</div>
                         </div>
-                        <div>方位角：{{ perviewBottom.azimuth }}°</div>
                       </div>
                     </div>
                   </el-collapse-item>
                 </el-collapse>
               </div>
             </el-tab-pane>
-            <el-tab-pane label="附件管理" name="third" @tab-click="handleClick">
+            <el-tab-pane label="销号管理" name="third">
               <div class="scrollable-tab-content">
-                <el-collapse v-model="activeNamesthree" @change="handleChange">
+                <el-collapse
+                  v-model="activeNamesthree"
+                  @change="handleChange"
+                  class="custom-collapse-item"
+                >
+                  <el-collapse v-model="activebetween" @change="handleChange">
+                    <el-collapse-item name="1" title="问题图斑信息">
+                      <el-descriptions
+                        class="margin-top"
+                        :size="size"
+                        :column="3"
+                        border
+                      >
+                        <el-descriptions-item :span="3">
+                          <template slot="label">销号人 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              v-model="inputxhr"
+                              placeholder="请输入内容"
+                            ></el-input>
+                          </div>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="" :span="3">
+                          <template slot="label">销号时间 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-date-picker
+                              @change="handleDateChange"
+                              v-model="value1xhsj"
+                              type="date"
+                              placeholder="选择日期"
+                            >
+                            </el-date-picker>
+                          </div>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="" :span="3">
+                          <template slot="label">销号状态 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-select
+                              v-model="optionsxhzp"
+                              placeholder="请选择"
+                            >
+                              <el-option
+                                v-for="item in optionsxhzt"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              >
+                              </el-option>
+                            </el-select></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="" :span="3">
+                          <template slot="label">销号原因 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              type="textarea"
+                              autosize
+                              placeholder="请输入内容"
+                              v-model="textarea1xhyy"
+                            >
+                            </el-input>
+                          </div>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="市县单位" :span="3">
+                          <template slot="label">市县单位 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              v-model="inputsxdw"
+                              placeholder="请输入内容"
+                            ></el-input></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="联系人" :span="3">
+                          <template slot="label">联系人 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              v-model="inputlxr"
+                              placeholder="请输入内容"
+                            ></el-input></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="联系电话" :span="3">
+                          <template slot="label">联系电话 </template>
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              v-model="inputlxdh"
+                              placeholder="请输入内容"
+                            ></el-input></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="备注" :span="3">
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-input
+                              class="input-erll"
+                              type="textarea"
+                              autosize
+                              placeholder="请输入内容"
+                              v-model="textarea1bz"
+                            >
+                            </el-input></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="核查任务名称" :span="3">
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-select
+                              v-model="optionshcrwm"
+                              placeholder="请选择"
+                            >
+                              <el-option
+                                v-for="item in optionshcrwmc"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              >
+                              </el-option>
+                            </el-select></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="管理区" :span="3">
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            <el-select v-model="optionsgl" placeholder="请选择">
+                              <el-option
+                                v-for="item in optionsglq"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
+                              >
+                              </el-option>
+                            </el-select></div
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="项目名称" :span="3">
+                          <div
+                            style="
+                              display: flex;
+                              align-items: center;
+                              justify-content: space-between;
+                            "
+                          >
+                            江苏省苏州市吴中区吴中大道 1188 号
+                          </div></el-descriptions-item
+                        >
+                        <el-descriptions-item label="是否纳入违法计算" :span="3"
+                          ><el-select
+                            v-model="optionssfnrwfj"
+                            placeholder="请选择"
+                          >
+                            <el-option
+                              v-for="item in optionssfnrwfjs"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                            >
+                            </el-option> </el-select
+                        ></el-descriptions-item>
+                        <el-descriptions-item label="提交" :span="3">
+                          <el-button type="primary" @click="handleButtonClick"
+                            >操作按钮</el-button
+                          ></el-descriptions-item
+                        >
+                      </el-descriptions>
+                    </el-collapse-item>
+                  </el-collapse>
+
                   <el-collapse-item
                     class="custom-collapse-item"
-                    title="附件管理"
+                    title="销号管理"
                     name="1"
                   >
                     <div>
@@ -279,7 +503,7 @@
             </el-tab-pane>
             <el-tab-pane label="生命周期" name="four" @tab-click="handleClick">
               <div class="scrollable-tab-content">
-                <el-collapse v-model="actList" @change="handleChange">
+                <el-collapse v-model="actList">
                   <el-collapse-item
                     class="custom-collapse-item"
                     title="图斑下发"
@@ -800,6 +1024,49 @@
                 </el-collapse>
               </div>
             </el-tab-pane>
+            <el-tab-pane label="违法行为信息" name="wffirst">
+              <div class="scrollable-tab-content">
+                <el-collapse v-model="activeNamess" @change="handleChange">
+                  <el-collapse-item title="违法行为信息" name="wan">
+                    <el-descriptions
+                      class="ellipsis"
+                      title=""
+                      :column="3"
+                      :size="size"
+                      border
+                    >
+                      <template slot="extra">
+                        <!-- <el-button type="primary" size="small">操作</el-button> -->
+                      </template>
+                      <el-descriptions-item
+                        v-for="(value, key) in filteredData"
+                        :key="key"
+                      >
+                        <template slot="label">
+                          <div
+                            :title="labels[key] || key"
+                            :class="{
+                              'blue-text':
+                                key === 'sfcfdw' ||
+                                key === 'tbsfla' ||
+                                key === 'hcjgczjy' ||
+                                key === 'tbsfzglsdw' ||
+                                key === 'wftbhc' ||
+                                key === 'wfczjg',
+                            }"
+                          >
+                            {{ formatText(labels[key]) || key }}
+                          </div>
+                        </template>
+                        <span :title="value">{{
+                          formatText(value) || "无"
+                        }}</span>
+                      </el-descriptions-item>
+                    </el-descriptions>
+                  </el-collapse-item>
+                </el-collapse>
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </div>
       </div>
@@ -922,10 +1189,28 @@
 </template>
 
 <script>
-// import Map from "../views/mapTwo.vue";
-import config from "../../../public/config/config";
-import axios from "axios";
-
+import Map from "../mapTwo.vue";
+import { loadMap, loadPhotoMap, MapInit } from "../../api/map/loadMap";
+// import config from "../../../public/config/config";
+// import axios from "axios";
+import {
+  freckleCode,
+  tbxf,
+  xjtb,
+  nysh,
+  smzqjd,
+  wyhc,
+  wfzg,
+  wzgqk,
+  smzqshjd,
+  getInfoById,
+  spotDetails,
+  updateAnnexInfo,
+  annexUpload,
+  specialAnnex,
+  updateProblemPatch,
+  updateOutsideCheck,
+} from "../../api/document/index";
 import elImageViewer from "element-ui/packages/image/src/image-viewer.vue";
 //引入VueOfficeDocx组件
 import VueOfficeDocx from "@vue-office/docx";
@@ -934,31 +1219,81 @@ import "@vue-office/docx/lib/index.css";
 import VueOfficeExcel from "@vue-office/excel";
 //引入相关样式
 import "@vue-office/excel/lib/index.css";
+import moment from "moment";
 export default {
+  computed: {
+    isEditDataEmpty() {
+      return !this.editData || Object.keys(this.editData).length === 0;
+    },
+  },
   data() {
     return {
+      activeNamess: [],
+      filteredData: {},
+      labels: {
+        freckleCode: "图斑编号",
+        offenceCode: "违法行为编号",
+        wfzwms: "违法行为描述",
+        wfzrzt: "违法责任主体",
+        sxwfdsr: "涉嫌违法当事人",
+        sxwfmj: "涉嫌违法面积",
+        qzgdmj: "其中耕地面积",
+        qzjbntmj: "其中基本农田面积",
+        hcjgczjy: "核查结果处置建议",
+        bylasm: "不予立案说明",
+        xmmc: "项目名称",
+        wfxz: "违法性质",
+        tbsfla: "填报是否已结案",
+        ajjl: "案件结论",
+        sfcfdw: "是否处罚到位",
+        tbsfzglsdw: "填报是否整改落实到位",
+        year: "年度",
+        sfsqfyqzzx: "是否申请人民法院强制执行",
+        wfxwfsd: "违法行为发生地",
+        jsxz: "建设现状",
+        sjyt: "实际用途",
+        wflx: "违法类型",
+        wftbhc: "违法图斑核查",
+        wfczjg: "违法处置结果",
+        landCode: "违法图斑编号",
+        cancelStatus: "销号状态",
+        cancelDate: "销号时间",
+        cancelBy: "销号人",
+        cancelReason: "销号原因",
+      },
+      labelPosition: "right",
+      formLabelAlign: {
+        name: "",
+        region: "",
+        type: "",
+      },
       activeSteprow: true,
       responseData: {},
-      tabListtbbh: [],
+      
       SpecklePattern: [],
       tabListtwolisttwo: [],
       tabListtwolist: [],
       tabListwan: [],
       tabListtwo: [],
-      actList: ["1", "2", "3", "4", "5", "6", "7"],
       tabList: [],
+      tabListtbbh: [],
+      actList: ["1", "2", "3", "4", "5", "6", "7"],
+
       name: localStorage.getItem("name"),
       id: "",
       snapdate: null,
       editData: [],
+      horizontal: null,
       currentFileUrl: "",
       // isPdf: false,
       leftWidth: 40,
       rightWidth: 50,
       isResizing: false,
       resData: {},
+      size: "",
       loadingData: null,
       show: true,
+      forliadd: "",
       activeName: "first",
       fieldslist: [],
       imgshou: [],
@@ -970,6 +1305,8 @@ export default {
       activeNamesfrist: ["1", "2", "3"],
       activeNamestwo: ["1"],
       activeNamesthree: ["1"],
+      activeNames: ["listlandCode", "wan"],
+      activebetween: ["1"],
       centerDialogVisible: false,
       direction: "btt",
       numberOfPhotos: 0,
@@ -1004,123 +1341,150 @@ export default {
       previewUrl: "", //预览属性
       dkbh_or_tbbh: null,
       activeStep: 0, // 设置默认激活的步骤
-      submitIntervalId: null,
+
       hasShownWarning: false, // 添加标志变量
       jdmcp: [],
-      steps: [
-        // "县级已填报",
-        // "市级已审核",
-        // "市级已审核(不通过)",
-        // "市级已审核(通过)",
-        // "外业核查",
-        // "集中举证",
-        // "互联网+",
-        // "百亩大图斑核查",
-        // "图形灭式",
-        // "已销号",
-      ],
+      steps: [],
+      freckleCode: "",
+      listrow: "",
+      optionsxhzt: [],
+      optionsxhzp: "",
+      optionshcrwmc: [],
+      optionshcrwm: "",
+      optionsglq: [],
+      optionsgl: "",
+      optionssfnrwfjs: [],
+      optionssfnrwfj: "",
+      inputxhr: "",
+      value1xhsj: "",
+      textarea1xhyy: "",
+      inputsxdw: "",
+      inputlxr: "",
+      inputlxdh: "",
+      textarea1bz: "",
     };
   },
-  mounted() {
-    document.querySelector(".right-column").style.overflow = "hidden";
 
+  mounted() {
     this.id = this.$route.query.id;
     this.landCode = this.$route.query.landCode;
+    this.freckleCode = this.$route.query.tbbh;
+    this.listrow = this.$route.query.listrow;
+    this.getData();
+    document.querySelector(".right-column").style.overflow = "hidden";
+    this.listrowl();
+    this.tbxfs();
+    this.freckleCod();
+    this.specialAnne();
 
-    (this.dkbh_or_tbbh = this.landCode),
-      axios
-        .get(config.url.tbxf, {
-          params: {
-            dkbh_or_tbbh: this.dkbh_or_tbbh,
-          },
-        })
-        .then((res) => {
-          this.tabList.push(res.data.data);
-        });
-    axios
-      .get(config.url.xjtb, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-        },
-      })
-      .then((res) => {
-        this.tabListwan = res.data.data;
+    // LifeCycle.drawChart();
+    MapInit(this); //地图关联初始化
+  },
+
+  components: {
+    Map,
+    elImageViewer,
+    VueOfficeDocx,
+    VueOfficeExcel,
+    // VueOfficePdf,
+  },
+  directives: {
+    tooltip: function (el, binding) {
+      el.setAttribute("title", binding.value);
+    },
+  },
+  methods: {
+    handleDateChange(date) {
+      const formattedDate = moment(date).format("YYYY-MM-DD");
+      // console.log(formattedDate);
+      this.value1xhsj = formattedDate;
+    },
+    handleButtonClick() {
+      let parmas = {
+        id: this.id,
+        cancelBy: this.inputxhr,
+        cancelDate: this.value1xhsj,
+        cancelStatus: this.optionsxhzp,
+        cancelReason: this.textarea1xhyy,
+        lxr: this.inputlxr,
+        lxdh: this.inputlxdh,
+        hcrwmc: this.inputsxdw,
+        glq: this.optionsgl,
+        sfnrwfjs: this.optionssfnrwfj,
+        remarks: this.textarea1bz,
+      };
+      updateProblemPatch(parmas).then((ok) => {
+        // console.log(ok);
+        if (ok.code == 200) {
+          this.$message({
+            message: "修改成功",
+            type: "success",
+          });
+        }
       });
-    axios
-      .get(config.url.nysh, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-        },
-      })
-      .then((res) => {
-        this.tabListtwo = res.data.data;
+    },
+    formatText(text) {
+      return text && text.length > 9 ? text.substring(0, 9) + "..." : text;
+    },
+    freckleCod() {
+      let params = {
+        freckleCode: this.listrow,
+      };
+
+      freckleCode(params).then((ok) => {
+        this.filteredData = ok.data;
       });
-    axios
-      .get(config.url.smzqjd, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-        },
-      })
-      .then((res) => {
-        this.tabListtwolist.push(res.data.data);
-        const { jdmc } = res.data.data;
+    },
+    tbxfs() {
+      let params = {
+        dkbh_or_tbbh: this.landCode || "10086",
+      };
+      tbxf(params).then((ok) => {
+        this.tabList.push(ok.data);
+      });
+      xjtb(params).then((ok) => {
+        this.tabListwan = ok.data;
+      });
+      nysh(params).then((ok) => {
+        this.tabListtwo = ok.data;
+      });
+      smzqjd(params).then((ok) => {
+        this.tabListtwolist.push(ok.data);
+        const { jdmc } = ok.data;
         if (jdmc && typeof jdmc === "string") {
           this.jdmcp = [{ jdmc }];
         }
       });
-    axios
-      .get(config.url.wyhc, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-        },
-      })
-      .then((res) => {
-        this.tabListtwolisttwo.push(res.data.data);
+      wyhc(params).then((ok) => {
+        this.tabListtwolisttwo.push(ok.data);
       });
-
-    this.snapdate = this.$route.query.snapdate;
-    axios
-      .get(config.url.wfzg, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-          // snapdate: this.snapdate,
-        },
-      })
-      .then((res) => {
-        this.SpecklePattern.push(res.data.data);
+      wfzg(params).then((ok) => {
+        this.SpecklePattern.push(ok.data);
       });
-    axios
-      .get(config.url.wzgqk, {
-        params: {
-          dkbh_or_tbbh: this.dkbh_or_tbbh,
-          // snapdate: this.snapdate,
-        },
-      })
-      .then((res) => {
-        this.tabListtbbh.push(res.data.data);
+      wzgqk(params).then((ok) => {
+        this.tabListtbbh.push(ok.data);
       });
-    axios
-      .get(config.url.smzqshjd, {
-        params: {
-          landCode: this.dkbh_or_tbbh,
-        },
-      })
-      .then((res) => {
-        // this.responseData = res.data.data;
+    },
+    listrowl() {
+      this.snapdate = this.$route.query.snapdate;
+      let params = {
+        landCode: this.landCode,
+      };
+      smzqshjd(params).then((ok) => {
         let stepObj = [
           { stepName: "县级已填报", stepType: "xjytb" },
           { stepName: "市级已审核", stepType: "sjysh" },
-          { stepName: "省级已审核(不通过)", stepType: "sjyshbtg" },
-          { stepName: "省级已审核(通过)", stepType: "sjyshtg" },
+          { stepName: "省级已审核", stepType: "sjyshbtg" },
+          { stepName: "省级已审核", stepType: "sjyshtg" },
           { stepName: "外业核查", stepType: "wyhc" },
           { stepName: "集中举证", stepType: "jzjz" },
           { stepName: "互联网+", stepType: "hlw" },
-          { stepName: "百亩大图斑核查", stepType: "bmdtb" },
+          { stepName: "百亩大图斑", stepType: "bmdtb" },
           { stepName: "图形灭失", stepType: "txms" },
           { stepName: "已销号", stepType: "yxh" },
         ];
         let arr = [];
-        let responseData = res.data.data;
+        let responseData = ok.data;
         for (let i in responseData) {
           arr.push({ [i]: responseData[i] });
         }
@@ -1134,30 +1498,21 @@ export default {
             if (item.stepType == Object.keys(itm)) {
               obj.stepState = Object.values(itm).join("");
             }
-            if (item.stepName == this.jdmcp[0].jdmc) {
-              this.activeStep = index + 1;
+            if (
+              this.jdmcp &&
+              this.jdmcp.length > 0 &&
+              item.stepName === this.jdmcp[0].jdmc
+            ) {
+              this.activeStep = stepObj.indexOf(item) + 1;
               obj.stepState = "2";
             }
           });
-
           stepArr.push(obj);
         });
-
         this.steps = stepArr;
       });
-    this.getData();
-    // LifeCycle.drawChart();
-    // MapInit(this); //地图关联初始化
-  },
+    },
 
-  components: {
-    // Map,
-    elImageViewer,
-    VueOfficeDocx,
-    VueOfficeExcel,
-    // VueOfficePdf,
-  },
-  methods: {
     rehgub() {
       this.activeSteprow = !this.activeSteprow;
     },
@@ -1185,8 +1540,8 @@ export default {
       this.updateAnnexInfo(param);
     },
     updateAnnexInfo(param) {
-      axios.put(config.url.updateAnnexInfo, param).then((res) => {
-        if (res.data.code == 200) {
+      updateAnnexInfo(param).then((res) => {
+        if (res.code == 200) {
           this.$notify({
             title: "修改成功",
             message: "操作成功完成",
@@ -1238,13 +1593,9 @@ export default {
       // 处理上传失败的逻辑
     },
     getTabLabel() {
-      // 返回一个包含 numberOfPhotos 变量的对象
-      return {
-        text: `现场照片(${
-          this.numberOfPhotos == null ? 0 : this.numberOfPhotos
-        })`,
-        obj: this.numberOfPhotos,
-      };
+      return `现场照片(${
+        this.numberOfPhotos == null ? 0 : this.numberOfPhotos
+      })`;
     },
     dran() {
       this.centerDialogVisible = true;
@@ -1256,27 +1607,21 @@ export default {
           this.fileList.map((item) => {
             params.append("file", item);
           });
-          params.append("landCode", this.landCode);
+          params.append("freckleCode", this.landCode);
           params.append("customAnnexName", this.ruleForm.textarea1);
           params.append("annexExplain", this.ruleForm.textarea2);
-          axios.post(config.url.upload, params).then((res) => {
-            let { code, data } = res.data;
-            if (code == 200) {
-              let obj = {};
-              obj.customAnnexName = this.ruleForm.textarea1;
-              obj.annexExplain = this.ruleForm.textarea2;
-              obj.path = data.path;
-              //往数组后面添加数据this.tableData
-              this.tableData.push(obj);
+          annexUpload(params).then((res) => {
+            if (res.code == 200) {
+              this.specialAnne();
               this.fileList = [];
-              this.textarea1 = "";
-              this.textarea2 = "";
+              this.ruleForm.textarea1 = "";
+              this.ruleForm.textarea2 = "";
               this.centerDialogVisible = false;
               this.$notify({
                 title: "上传成功",
                 message: "操作成功完成",
                 type: "success",
-                duration: 2000, // 显示时长，单位毫秒
+                duration: 2000,
               });
             }
           });
@@ -1320,6 +1665,7 @@ export default {
       this.perviewBottom = this.imgshou[index];
       this.currentarr = true;
       // 稍作延迟后重新打开预览
+
       this.$nextTick(() => {
         this.showviewer = true;
         loadPhotoMap(this.imgshou[index], this); // 更新地图
@@ -1358,58 +1704,94 @@ export default {
       this.isResizing = false;
       window.removeEventListener("mousemove", this.resize);
       window.removeEventListener("mouseup", this.stopResize);
-      loadMap(this.resData);
     },
     close() {
       this.$router.back();
     },
-    //获取初始化数据
-    getData() {
-      // this.loadingData = this.$loading({
-      //   lock: true,
-      //   text: "查询中",
-      //   spinner: "el-icon-loading",
-      //   background: "rgba(0, 0, 0, 0.7)",
-      // });
-      axios
-        .get(config.url.problemPatchId, {
-          params: {
-            dkid: this.id,
-            id: this.id,
-            snapdate: this.snapdate,
-          },
-        })
-        .then((res) => {
-          // 关闭loading
-          if (res.data.code == 200) {
-            res.data.freckleGeomList = res.data.data.freckleGeomList;
-            this.resData = res.data;
-            this.addData(res.data); //页面布局数据
 
-            this.resData.data.photos[0].fields.forEach((item) => {
-              this.imgshou.push(item);
-              this.numberOfPhotos = this.imgshou.length;
-            });
-            this.resData.data.files[0].fields.forEach((item) => {
-              this.tableData.push(item);
-            });
-          } else {
-            // this.resData = config.url.exampleData.data.data;
-            // this.addData(config.url.exampleData.data);
-          }
-        })
-        .catch((error) => {
-          // 显示错误信息
-          //this.$message({ message: error });
-        })
-        .finally(() => {
-          this.loadingData.close();
-        });
+    getData() {
+      let params = {
+        dkid: this.id || 1,
+        id: this.id || 1,
+        snapdate: this.snapdate,
+        freckleCode: this.freckleCode,
+      };
+      getInfoById(params).then((res) => {
+        this.addData(res.data);
+        this.resData = res.data;
+        loadMap(this.resData);
+        const fields = res.data.attributes[0].fields;
+        const values = fields.map((field) => field.values);
+
+        this.optionsxhzt = values[2].map((option) => ({
+          label: option,
+          value: option,
+        }));
+        this.optionshcrwmc = values[8].map((option) => ({
+          label: option,
+          value: option,
+        }));
+        this.optionsglq = values[9].map((option) => ({
+          label: option,
+          value: option,
+        }));
+        this.optionssfnrwfjs = values[11].map((option) => ({
+          label: option,
+          value: option,
+        }));
+        const field = res.data.attributes[0].fields;
+        const valvues = field.map((field) => field.fieldValue);
+
+        this.inputxhr = valvues[0];
+        this.value1xhsj = valvues[1];
+        this.optionsxhzp = valvues[2];
+        this.textarea1xhyy = valvues[3];
+        this.inputsxdw = valvues[4];
+        this.inputlxr = valvues[5];
+        this.inputlxdh = valvues[6];
+        this.textarea1bz = valvues[7];
+        this.optionshcrwm = valvues[8];
+        this.optionsgl = valvues[9];
+        this.optionssfnrwfj = valvues[11];
+
+        if (res.code == 200) {
+          res.data.freckleGeomList = res.data.freckleGeomList;
+          // console.log(this.resData.photos[0].fields, "11111111111");
+          this.resData.photos[0].fields.forEach((item) => {
+            this.imgshou.push(item);
+            this.numberOfPhotos = this.imgshou.length;
+          });
+          // console.log(this.imgshou.length, "22222222222");
+        }
+      });
+
+      let freckle = {
+        freckleCode: this.listrow || "1111",
+      };
+      spotDetails(freckle).then((res) => {
+        if (res.code == 200) {
+          res.data.freckleGeomList = res.data.freckleGeomList;
+          this.resData = res.data;
+          this.addData(res.data);
+          this.resData.photos[0].fields.forEach((item) => {
+            this.imgshou.push(item);
+            this.numberOfPhotos = this.imgshou.length;
+          });
+        }
+      });
+    },
+    specialAnne() {
+      let pams = {
+        landCode: this.landCode,
+      };
+      specialAnnex(pams).then((ok) => {
+        // console.log(ok);
+        this.tableData = ok.data;
+      });
     },
     //初始化页面布局数据
     addData(data) {
-      this.editData = data.data.attributes;
-
+      this.editData = data.attributes;
       this.editData.forEach((ele) => {
         ele.fApi = {};
         ele.rule = [];
@@ -1422,6 +1804,7 @@ export default {
             labelAlign: "center",
           },
         };
+
         ele.fields.forEach((item) => {
           var fieldValue = item.fieldValue == null ? "" : item.fieldValue; //值
           var arrValues = item.values == null ? [] : item.values; //单选字典
@@ -1525,7 +1908,7 @@ export default {
                 disabled: !item.editable,
                 clearable: true,
                 type: "textarea",
-                autosize: "{ minRows: 4, maxRows: 8}",
+                autosize: { minRows: 4, maxRows: 8 },
               },
             });
           }
@@ -1535,73 +1918,82 @@ export default {
         loadMap(data);
       }, 800);
     },
-
-    onSubmit(item) {
-      this.showReminder();
-      this.submitIntervalId = setInterval(() => {
-        this.showReminder();
-      }, 5 * 60 * 1000);
-      item.fApi.submit((formData, fApi) => {
-        alert(JSON.stringify(formData));
-        Object.entries(formData).forEach(function ([key, value]) {
-          if (Array.isArray(value)) {
-            // 判断是否为数组
-            if (Array.isArray(arr[0])) {
-              if (value != undefined) {
-                var data = [];
-                value.forEach((ele) => {
-                  data.push(ele[1]);
-                });
-                value = data.join(",");
-              }
-            } else {
-              return (value = value.join(","));
-            }
-          }
+    handlebnsdgb(val) {
+      if (!val.includes("listlandCode")) {
+        this.$nextTick(() => {
+          this.activeNames = ["listlandCode"];
         });
-        formData.id = item.id;
-        axios.put(item.url, formData).then((res) => {
-          // 关闭loading
-          if (res.data.code == 200) {
-            this.$message(res.data.msg);
-          } else {
-            this.$message(res.data.msg);
-          }
-        });
-      });
+      }
     },
-    showReminder() {
-      // 检查是否已经弹出过警告
-      if (!this.hasShownWarning) {
-        this.$notify({
-          title: "警告",
-          message: "请先上传附件",
-          type: "error",
-          duration: 5000,
+    onSubmit(item) {
+      if (item && item.fApi) {
+        // console.log("item:", item);
+        // console.log("item.fApi:", item.fApi);
+        item.fApi.submit((formData, fApi) => {
+          Object.entries(formData).forEach(function ([key, value]) {
+            if (Array.isArray(value)) {
+              if (Array.isArray(value[0])) {
+                if (value !== undefined) {
+                  var data = [];
+                  value.forEach((ele) => {
+                    data.push(ele[1]);
+                  });
+                  value = data.join(",");
+                }
+              } else {
+                value = value.join(",");
+              }
+            }
+          });
+          formData.id = item.id;
+          if (
+            item.url ===
+            "http://124.114.203.222:8084/wpzf/problemPatch/updateProblemPatch"
+          ) {
+            updateProblemPatch(formData).then((res) => {
+              if (res.code === 200) {
+                this.$message({
+                  message: "成功",
+                  type: "success",
+                });
+              }
+            });
+          } else if (
+            item.url ===
+            "http://124.114.203.222:8084/wpzf/fieldCheck/updateOutsideCheck"
+          ) {
+            updateOutsideCheck(formData).then((res) => {
+              if (res.code === 200) {
+                this.$message({
+                  message: "成功",
+                  type: "success",
+                });
+              }
+            });
+          }
         });
-        // 将标志设置为 true，表示已经弹出过警告
-        this.hasShownWarning = true;
-        this.activeName = "third";
       }
     },
     iconview(file) {
       this.resetPreviewFlags(); // 重置所有预览标志
       const fileExtension = file.annexUrl.split(".").pop().toLowerCase(); // 获取文件扩展名
+      const parts = file.annexUrl.split(":8084");
+      const path = parts[1];
       switch (fileExtension) {
         case "xlsx":
           this.isexcel = true;
-          this.previewUrl = file.annexUrl;
+          this.previewUrl = `/img${path}`;
           break;
         case "docx":
         case "doc":
           this.isdocx = true;
           this.previewUrl = `https://docs.google.com/gview?url=${encodeURIComponent(
-            file.annexUrl
+            `/img${path}`
           )}&embedded=true`;
           break;
         case "pdf":
           this.ispdf = true;
-          this.previewUrl = file.annexUrl;
+          this.previewUrl = `/img${path}`;
           break;
         case "jpg":
         case "jpeg":
@@ -1609,10 +2001,10 @@ export default {
         case "gif":
         case "bmp":
           this.isImage = true;
-          this.previewUrl = file.annexUrl;
+          this.previewUrl = `/img${path}`;
           break;
         default:
-          this.previewUrl = file.annexUrl; // 处理其他文件类型或默认行为
+          this.previewUrl = `/img${path}`; // 处理其他文件类型或默认行为
       }
       this.fullscreenVisible = true; // 显示预览窗口
     },
@@ -1631,26 +2023,20 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
-    beforeDestroy() {
-      // 清除提交定时器
-      if (this.submitIntervalId) {
-        clearInterval(this.submitIntervalId);
-        // 重置标志为 false，以便下次点击提交时再次弹出警告
-        this.hasShownWarning = false;
-      }
-    },
+
+    handleChange() {},
   },
 };
 </script>
 
 <style scoped>
-/* .map {
+.map {
   position: relative;
 }
-@import url("../map/mapbox-gl/mapbox-gl.css");
+@import url("../../api/map/mapbox-gl/mapbox-gl.css");
 .mapboxgl-ctrl-logo {
   display: none !important;
-} */
+}
 .custom-title-style {
   /* font-size: 12px; 设置字体大小 */
   font-weight: bold; /* 设置字体粗体 */
@@ -1709,10 +2095,11 @@ export default {
 }
 
 .img-container {
-  /* height: 800px; */
+  /* height: 650px; */
   display: flex;
   flex-wrap: wrap;
   overflow-y: auto;
+  /* background-color: #0078d7; */
 }
 .item-list {
   height: 150px;
@@ -1748,24 +2135,34 @@ export default {
   max-width: 150px;
 }
 .showviewercolor {
-  height: 80%;
+  position: relative;
 }
 .img-updaby {
+  position: absolute;
+  left: 0;
+  bottom: 0;
   width: 100%;
   height: 40px;
-  left: 0;
   display: flex;
   justify-content: space-between;
   background-color: #e6f0e9;
   color: #3b3bca;
   border: 1px solid #0078d7;
-  z-index: 999;
+  z-index: 9999;
   line-height: 20px;
   padding: 9px;
-  position: absolute;
-  left: 0;
-  bottom: 5px;
 }
+@media screen and (min-width: 1920px) {
+  .img-updaby {
+    bottom: 1.1vw;
+  }
+}
+@media screen and (min-width: 2560px) {
+  .img-updaby {
+    bottom: 1.5vw;
+  }
+}
+
 .bottom-conter {
   width: 100px;
   display: flex;
@@ -1807,7 +2204,7 @@ export default {
 }
 
 .scrollable-tab-content {
-  max-height: 800px;
+  max-height: 700px;
   overflow-y: auto;
 }
 .nuiop {
@@ -1817,7 +2214,7 @@ export default {
   justify-content: space-evenly;
 }
 .contentk {
-  height: 750px;
+  height: 690px;
 }
 .nuiop >>> .el-dialog__header {
   background: #0078d7 !important; /* 设置为蓝色 */
@@ -1890,5 +2287,23 @@ export default {
   font-size: 20px;
   font-weight: bold;
   margin-left: 10px;
+}
+.page-header {
+  height: 40px;
+  width: 100%;
+}
+.title-text {
+  font-size: 16px;
+  margin-left: 10px;
+}
+.image-viewerlo {
+  height: 70%;
+  width: 30%;
+}
+.input-erll >>> .el-input__inner {
+  border: none;
+}
+.input-erll >>> .el-textarea__inner {
+  border: none;
 }
 </style>

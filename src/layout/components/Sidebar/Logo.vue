@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import logoImg from "@/assets/logo/logo.png";
+import logoImg from "@/assets/logo/shan.png";
 import variables from "@/assets/styles/variables.scss";
 
 export default {
@@ -70,7 +70,7 @@ export default {
   },
   data() {
     return {
-      title: process.env.VUE_APP_TITLE,
+      title: "陕西卫片执法监管平台",
       logo: logoImg,
     };
   },
@@ -105,6 +105,7 @@ export default {
       height: 32px;
       vertical-align: middle;
       margin-right: 12px;
+      border-radius: 17px;
     }
 
     & .sidebar-title {

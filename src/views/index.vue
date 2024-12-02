@@ -2,180 +2,75 @@
   <div class="container">
     <div class="line"></div>
     <div class="sellect">
-      <el-form ref="form" :model="formData" label-width="30px">
+      <el-form ref="form" :model="formData7" label-width="55px">
         <div>
           <el-row class="title" type="flex" align="middle">
             <el-col :span="4">
-              <el-cascader
-                ref="cascader"
-                clearable
-                v-model="selectXZQ"
-                :options="xzq"
-                :style="{ width: '100%' }"
-                :props="{
-                  value: 'dictName',
-                  children: 'dataList',
-                  label: 'dictName',
-                  multiple: true,
-                }"
-                collapse-tags
-                @change="handleChangeXzq"
-                placeholder="请选择行政区"
-              ></el-cascader>
-            </el-col>
-            <el-col :span="4">
-              <div class="block">
-                <el-date-picker
-                  v-model="time"
-                  type="monthrange"
-                  range-separator="至"
-                  :picker-options="pickerOptions0"
-                  start-placeholder="开始月份"
-                  end-placeholder="结束月份"
-                >
-                </el-date-picker>
-              </div>
-            </el-col>
-            <el-col :span="3" :style="{ marginLeft: '40px' }">
-              <el-form-item label="">
-                <div class="block">
-                  <el-date-picker
-                    v-model="formData.snapdate"
-                    type="date"
-                    placeholder="请选择数据时点日期"
-                    :picker-options="ptyOptions"
-                  >
-                  </el-date-picker>
-                </div>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="3" :style="{ marginLeft: '40px' }">
-              <el-form-item label="">
-                <el-input
-                  v-model="formData.checkJobName"
-                  v-on:input="restrictSpecialCharacters"
-                  placeholder="请输入核查工作名称"
+              <el-form-item label="行政区">
+                <el-cascader
+                  ref="cascader"
                   clearable
+                  v-model="formData7.selectXZQ"
+                  :options="xzq"
                   :style="{ width: '100%' }"
-                ></el-input>
+                  :props="{
+                    value: 'value',
+                    label: 'label',
+                    children: 'children',
+                    multiple: true,
+                  }"
+                  collapse-tags
+                  @change="handleChangeXzq"
+                  placeholder="请选择行政区"
+                ></el-cascader>
               </el-form-item>
-              <div v-if="showError" style="color: rgb(152, 140, 140)">
-                只能输入字母、数字和空格！
-              </div>
             </el-col>
             <el-col :span="5">
-              <el-form-item label="">
-                <el-input
-                  placeholder="请输入图斑编号/地块编号"
-                  v-model.trim="formData.dkOrTb"
-                  clearable
+              <el-date-picker
+                v-model="formData7.valuetime"
+                type="daterange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                @change="handleDateChange"
+              >
+              </el-date-picker>
+            </el-col>
+            <!-- <el-col :span="3" :style="{ marginLeft: '10px' }">
+              <el-date-picker
+                v-model="formData.snapdate"
+                type="date"
+                placeholder="请选择数据时点日期"
+                :picker-options="ptyOptions"
+              >
+              </el-date-picker>
+            </el-col> -->
+
+            <el-col :span="4" :style="{ marginLeft: '15px' }">
+              <el-input
+                size="medium"
+                placeholder="请输入图斑编号/地块编号"
+                v-model.trim="formData7.dkOrTb"
+                clearable
+                @keydown.native="handleKeyDown"
+              >
+              </el-input>
+            </el-col>
+            <el-col :span="3" class="isscreen">
+              <div>
+                <screen @getData="emitGetData" />
+              </div>
+              <div>
+                <el-button type="primary" @click="findAll(true)"
+                  >查询</el-button
                 >
-                </el-input>
-              </el-form-item>
+              </div>
             </el-col>
-            <el-col :span="4">
-              <screen @getData="getFrom" />
-
-              <el-button
-                type="primary"
-                @click="findAll(true)"
-                :style="{ marginRight: '10px', marginLeft: '10px' }"
-                >查询</el-button
-              >
-
-              <el-button type="text" v-if="false"
-                >更多查询 <span class="iconfont">&#xe60e;</span></el-button
-              >
-
-              <el-button
-                type="danger"
-                @click="clear"
-                :style="{ marginRight: '10px' }"
-                >清除</el-button
-              >
-            </el-col>
+            <el-col :span="5" class="containe"> </el-col>
           </el-row>
         </div>
         <div>
           <el-row>
-            <!-- <el-col :span="4">
-              <el-form-item label="">
-                <el-select
-                  v-model="formData.cancelStatus"
-                  placeholder="请选择销号状态"
-                  :style="{ width: '100%' }"
-                  clearable
-                  multiple
-                >
-                  <el-option
-                    v-for="item in xhzt"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col> -->
-            <!-- <el-col :span="3">
-              <el-form-item label="" class="checkDetermineResult">
-                <el-select
-                  multiple
-                  v-model="formData.pdlx"
-                  placeholder="请选择原判定类型"
-                  clearable
-                >
-                  <el-option
-                    v-for="item in pdlx"
-                    :key="item.text"
-                    :label="item.label"
-                    :value="item.value"
-                    :style="{ width: '100%' }"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col> -->
-            <!-- <el-col :span="4">
-              <el-form-item label="">
-                <el-select
-                  multiple
-                  v-model="formData.checkDetermineResult"
-                  placeholder="请选择核查后判定类型"
-                  clearable
-                >
-                  <el-option
-                    v-for="item in pdlx"
-                    :key="item.text"
-                    :label="item.label"
-                    :value="item.value"
-                    :style="{ width: '100%' }"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col> -->
-            <!-- <el-col :span="4">
-              <el-form-item label="">
-                <el-select
-                  v-model="formData.checkMethod"
-                  placeholder="请选择核查方式"
-                  clearable
-                  multiple
-                >
-                  <el-option
-                    v-for="item in hcfs"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                    :style="{ width: '100%' }"
-                  >
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col> -->
-
             <div class="iconfontlist"></div>
           </el-row>
         </div>
@@ -190,17 +85,18 @@
         height="600"
         :data="tableData"
       >
+        <el-table-column type="selection" width="55"> </el-table-column>
         <el-table-column
           prop="index1"
           label="序号"
           type="index"
-          :resizable="false"
           align="center"
-          width="46"
+          :resizable="false"
+          width="70"
         >
         </el-table-column>
 
-        <el-table-column
+        <!-- <el-table-column
           prop="checkJobName"
           :resizable="false"
           align="center"
@@ -218,13 +114,13 @@
               </div>
             </el-tooltip>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column
           prop="city"
           :resizable="false"
           align="center"
           label="市"
-          width="114"
+          width="70"
         />
 
         <el-table-column
@@ -232,7 +128,7 @@
           :resizable="false"
           align="center"
           label="区县"
-          width="114"
+          width="100"
         />
 
         <el-table-column
@@ -240,9 +136,9 @@
           :resizable="false"
           align="center"
           label="图斑编号"
-          width="116"
+          width="235"
         >
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <el-tooltip
               :content="scope.row.freckleCode"
               placement="top"
@@ -252,7 +148,7 @@
                 {{ scope.row.freckleCode }}
               </div>
             </el-tooltip>
-          </template>
+          </template> -->
         </el-table-column>
 
         <el-table-column
@@ -260,9 +156,9 @@
           :resizable="false"
           align="center"
           label="地块编号"
-          width="115"
+          width="180"
         >
-          <template slot-scope="scope">
+          <!-- <template slot-scope="scope">
             <el-tooltip
               :content="scope.row.landCode"
               placement="top"
@@ -272,131 +168,123 @@
                 {{ scope.row.landCode }}
               </div>
             </el-tooltip>
-          </template>
+          </template> -->
         </el-table-column>
 
         <el-table-column
           prop="tbfl"
           :resizable="false"
           align="center"
-          label="图斑分类"
-          width="117"
+          label="图斑类型"
+          width="200"
         >
         </el-table-column>
 
+        <!-- <el-table-column
+          prop="hcjd"
+          :resizable="false"
+          align="center"
+          label="核查节点"
+          width="115"
+        >
+        </el-table-column> -->
+
+        <el-table-column
+          prop="dkmj"
+          :resizable="false"
+          align="center"
+          label="地块面积(亩)"
+          width="115"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="gdmj"
+          :resizable="false"
+          align="center"
+          label="耕地面积(亩)"
+          width="115"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="nydmj"
+          :resizable="false"
+          align="center"
+          label="永久基本农田面积(亩)"
+          width="200"
+        >
+        </el-table-column>
         <el-table-column
           prop="pdlx"
           :resizable="false"
           align="center"
-          label="原判定类型"
-          width="115"
+          label="判定类型"
+          width="117"
         >
+          <!-- <template slot-scope="scope">
+            <div>
+              <el-tag
+                :type="
+                  scope.row.pdlx === '未销号'
+                    ? 'danger'
+                    : scope.row.pdlx === '已销号'
+                    ? 'success'
+                    : 'primary'
+                "
+                disable-transitions
+                >{{ scope.row.pdlx }}</el-tag
+              >
+            </div>
+          </template> -->
         </el-table-column>
         <el-table-column
-          prop="checkDetermineResult"
+          prop="qbtbHchpdlx"
           :resizable="false"
           align="center"
-          label="核查后判定类型"
+          label="核查后类型"
           width="115"
         >
         </el-table-column>
         <el-table-column
-          prop="cancelStatus"
+          prop="hczt"
+          :resizable="false"
+          align="center"
+          label="核查状态"
+          width="115"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="sfwttb"
+          :resizable="false"
+          align="center"
+          label="是否问题图斑"
+          width="115"
+        >
+        </el-table-column>
+        <el-table-column
+          prop="qbtbCancelStatus"
           :resizable="false"
           align="center"
           label="销号状态"
-          width="117"
+          width="115"
         >
           <template slot-scope="scope">
-            <el-tag
-              :type="
-                scope.row.cancelStatus === '未销号'
-                  ? 'danger'
-                  : scope.row.cancelStatus === '已销号'
-                  ? 'success'
-                  : 'primary'
-              "
-              disable-transitions
-              >{{ scope.row.cancelStatus }}</el-tag
-            >
+            <!-- @click="appli(scope)"、 -->
+            <div v-if="scope.row.qbtbCancelStatus">
+              <el-tag
+                :type="
+                  scope.row.qbtbCancelStatus === '未销号'
+                    ? 'danger'
+                    : scope.row.qbtbCancelStatus === '已销号'
+                    ? 'success'
+                    : 'primary'
+                "
+                disable-transitions
+              >
+                {{ scope.row.qbtbCancelStatus }}
+              </el-tag>
+            </div>
           </template>
         </el-table-column>
-
-        <el-table-column
-          prop="smzqjd"
-          :resizable="false"
-          align="center"
-          label="生命周期节点"
-          width="115"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="shyj"
-          :resizable="false"
-          align="center"
-          label="省级审核意见"
-          width="115"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="illegalityType"
-          :resizable="false"
-          align="center"
-          label="核查后违法类型"
-          width="116"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="deductionType"
-          :resizable="false"
-          align="center"
-          label="扣减类型"
-          width="114"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="checkMethod"
-          :resizable="false"
-          align="center"
-          label="核查方式"
-          width="114"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="actualUse"
-          :resizable="false"
-          align="center"
-          label="核查后实际用途"
-          width="112"
-        >
-        </el-table-column>
-        <el-table-column
-          prop="freckleInfractionArea"
-          :resizable="false"
-          align="center"
-          label="核查后地块面积"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="freckleInfractionArable"
-          :resizable="false"
-          align="center"
-          label="核查后耕地面积"
-          width="130"
-          sortable
-        >
-        </el-table-column>
-        <el-table-column
-          prop="freckleInfractionFarmland"
-          :resizable="false"
-          align="center"
-          label="核查后基本农田面积"
-          width="130"
-        >
-        </el-table-column>
-
         <el-table-column
           fixed="right"
           label="操作"
@@ -409,67 +297,64 @@
               style="color: #18a1f0; fontsize: 20px"
               class="button"
               type="text"
-              >编辑</el-button
+              >详情</el-button
             >
           </template>
         </el-table-column>
       </el-table>
     </div>
-
     <div class="flexlist">
-      <div style="width: 50%">
+      <div style="width: 50%; height: 30px">
         <el-row class="title" type="flex" align="middle">
-          <div :style="{ marginLeft: '10px' }">
-            <el-button type="danger" icon="iconfont"
-              ><span class="iconfont">&#xe754;</span>
-              添加至核查任务列表</el-button
-            >
-            <!-- @click="addTask" -->
-          </div>
-          <div :style="{ marginLeft: '10px' }">
-            <el-button type="primary" icon="iconfont " @click="importData"
-              ><span class="iconfont">&#xe65e;</span> 批量导入</el-button
-            >
-          </div>
           <!-- <div :style="{ marginLeft: '10px' }">
-            <el-button type="primary" @click="exportData"
-              ><span class="iconfont">&#xe65e;</span> 数据导出</el-button
+           
+            <el-button type="primary" size="mini" @click="importData"
+              >批量导入</el-button
             >
           </div> -->
           <div :style="{ marginLeft: '10px' }">
-            <el-dropdown class="dropdown-left" @command="dropdownItemClick">
-              <el-button class="dropdown-left" type="primary">
-                数据导出<i class="el-icon-arrow-down el-icon--right"></i>
+            <el-dropdown @command="dropdownItemClick">
+              <el-button size="mini" type="primary">
+                计算池<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="exportCurrentList"
-                  >当前清单列表</el-dropdown-item
+                <el-dropdown-item
+                  command="exportCurrentList"
+                  v-if="permissions['添加至计算池'] === 0"
+                  >添加至计算池</el-dropdown-item
                 >
-                <el-dropdown-item command="qualityCheckList"
-                  >数据质检清单</el-dropdown-item
-                >
-                <el-dropdown-item command="uploadFileList"
-                  >上传文件清单</el-dropdown-item
+                <el-dropdown-item
+                  command="uploadFileList"
+                  v-if="permissions['计算池清单'] === 0"
+                  >计算池清单</el-dropdown-item
                 >
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <div :style="{ marginLeft: '10px' }">
-            <el-button
-              type="primary"
-              icon="el-icon-plus"
-              class="elprimary"
-              @click="computing"
-              >添加至计算池</el-button
+          <div
+            :style="{ marginLeft: '10px' }"
+            v-if="permissions['当前清单列表'] === 0"
+          >
+            <el-button type="primary" size="mini" @click="computing"
+              >当前清单列表</el-button
+            >
+          </div>
+          <div
+            :style="{ marginLeft: '10px' }"
+            v-if="permissions['生成审核情况报告'] === 0"
+          >
+            <el-button size="mini" type="primary" @click="scshqkbg"
+              >生成审核情况报告</el-button
             >
           </div>
         </el-row>
       </div>
       <div style="width: 50%">
         <el-pagination
+          @size-change="handleSizeli"
           @current-change="handleCurrentChange"
           :current-page="currentPage"
-          :page-sizes="[20]"
+          :page-sizes="[20, 50, 100, 150]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
@@ -480,13 +365,15 @@
 
     <div class="el-dialoglbody">
       <div class="dialoglbodylo">
+        <!-- -->
+        <!-- :close-on-click-modal="false" -->
         <el-dialog
           :title="title"
-          :visible.sync="dialogUploadVisible"
-          :close-on-click-modal="false"
           :before-close="handleClosefengt"
+          :visible.sync="dialogUploadVisible"
         >
           <el-upload
+            v-loading="loadingxlsx"
             class="upload"
             drag
             accept=".xls, .xlsx"
@@ -503,13 +390,18 @@
             <div class="el-upload__tip" slot="tip">只能上传excl文件</div>
           </el-upload>
 
-          <el-button type="primary" @click="downLoadTemplate()">{{
+          <!-- <el-button type="primary" @click="downLoadTemplate()">{{
             uploadButton
-          }}</el-button>
+          }}</el-button> -->
           <el-button type="primary" @click="qualityinspection"
-            >数据质检</el-button
+            >上传外业核查数据</el-button
           >
-          <el-button type="primary" @click="beforeUpload">上传文件</el-button>
+          <el-button type="primary" @click="beforeUpload"
+            >上传全部图斑数据</el-button
+          >
+          <!-- <el-button type="primary" @click="beforeUploadjzjz"
+            >上传集中举证数据</el-button
+          > -->
         </el-dialog>
         <div v-if="progressVisible" class="progressVisiblerow">
           <el-progress :percentage="uploadProgress"></el-progress>
@@ -517,7 +409,7 @@
       </div>
     </div>
     <el-dialog
-      title="请添加名称"
+      title="请填写名称"
       :visible.sync="centerVisible"
       width="30%"
       center
@@ -541,13 +433,18 @@
       >
         <div class="grouplist">
           <div>
-            <el-input
-              v-model.trim="inputsearch"
-              placeholder="搜索"
-              @blur="handleSearch"
-            ></el-input>
+            <el-input v-model.trim="inputsearch"></el-input>
           </div>
-          <div class="grouplist">
+          <div :style="{ marginLeft: '10px' }">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="handleSearch"
+              >搜索</el-button
+            >
+          </div>
+
+          <div class="grouplist" :style="{ marginLeft: '10px' }">
             <el-button-group>
               <el-button type="primary" @click="exportData"
                 >开始打包生成</el-button
@@ -557,10 +454,17 @@
           </div>
         </div>
         <div id="DataListrow">
-          <el-table :data="DataListrow" style="width: 100%" height="500px">
-            <el-table-column type="index" label="序号" width="200">
+          <el-table
+            :data="DataListrow"
+            style="width: 100%"
+            height="500px "
+            v-loading="loadingqingdan"
+            @selection-change="handleSelece"
+          >
+            <el-table-column type="selection" width="55"> </el-table-column>
+            <el-table-column type="index" label="序号" width="80">
             </el-table-column>
-            <el-table-column prop="fileName" label="文件名称" width="200">
+            <el-table-column prop="fileName" label="文件名称" width="180">
               <template slot-scope="scope">
                 <el-tooltip
                   :content="scope.row.fileName"
@@ -573,15 +477,20 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="fileSize" label="文件大小(MB)" width="200">
+
+            <el-table-column
+              prop="fileDescription"
+              label="文件大小(MB)"
+              width="180"
+            >
             </el-table-column>
             <el-table-column
               prop="fileDescription"
               label="说明描述"
-              width="200"
+              width="180"
             >
             </el-table-column>
-            <el-table-column prop="createBy" label="创建人" width="200">
+            <el-table-column prop="createBy" label="创建人" width="180">
               <template slot-scope="scope">
                 <el-tooltip
                   :content="scope.row.createBy"
@@ -594,7 +503,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="200">
+            <el-table-column prop="createTime" label="创建时间" width="180">
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -606,8 +515,17 @@
               </template>
             </el-table-column>
           </el-table>
-          <div>
-            <div class="block">
+          <div
+            style="
+              display: flex;
+              justify-content: space-evenly;
+              align-items: center;
+            "
+          >
+            <div style="width: 50%">
+              <el-button type="primary" @click="shanliop">删除</el-button>
+            </div>
+            <div class="block" style="width: 50%">
               <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange1"
@@ -634,18 +552,22 @@
       >
         <div class="grouplist">
           <div>
-            <el-input
-              v-model.trim="inputsize"
-              placeholder="搜索"
-              @blur="handleSinputsize"
-            ></el-input>
+            <el-input v-model.trim="inputsize" placeholder="搜索"></el-input>
+          </div>
+          <div :style="{ marginLeft: '10px' }">
+            <el-button
+              type="primary"
+              icon="el-icon-search"
+              @click="handleSinputsize"
+              >搜索</el-button
+            >
           </div>
         </div>
         <div id="DataListrowscope">
           <el-table :data="DataListrowscope" style="width: 100%" height="500px">
-            <el-table-column type="index" label="序号" width="200">
+            <el-table-column type="index" label="序号" width="180">
             </el-table-column>
-            <el-table-column prop="checkName" label="文件名称" width="200">
+            <el-table-column prop="checkName" label="文件名称" width="180">
               <template slot-scope="scope">
                 <el-tooltip
                   :content="scope.row.checkName"
@@ -661,7 +583,7 @@
             <el-table-column
               prop="checkDescription"
               label="文件描述"
-              width="200"
+              width="180"
             >
               <template slot-scope="scope">
                 <el-tooltip
@@ -675,9 +597,9 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="checkSize" label="文件大小(MB)" width="200">
+            <el-table-column prop="checkSize" label="文件大小(MB)" width="180">
             </el-table-column>
-            <el-table-column prop="createBy" label="创建人" width="200">
+            <el-table-column prop="createBy" label="创建人" width="180">
               <template slot-scope="scope">
                 <el-tooltip
                   :content="scope.row.createBy"
@@ -690,7 +612,7 @@
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="200">
+            <el-table-column prop="createTime" label="创建时间" width="180">
             </el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
@@ -707,7 +629,7 @@
     </div>
     <div class="pole">
       <el-dialog
-        title="上传文件清单"
+        title="计算池文件清单"
         append-to-body
         :visible.sync="Uploadfilelist"
         modal-append-to-body
@@ -718,88 +640,335 @@
           <div>
             <el-input
               v-model.trim="Dataerinputsearch"
-              placeholder="搜索"
-              @blur="DataerhandleSearch"
+              placeholder="添加融合名称"
             ></el-input>
+          </div>
+          <div :style="{ marginLeft: '10px' }">
+            <!-- icon="el-icon-search" -->
+            <el-button type="primary" @click="DataerhandleSearch"
+              >融合</el-button
+            >
           </div>
         </div>
         <div id="Dataer">
-          <el-table :data="Dataer" style="width: 100%" height="500px">
-            <el-table-column type="index" label="序号" width="200">
-            </el-table-column>
-            <el-table-column prop="importName" label="文件名称" width="200">
-              <template slot-scope="scope">
-                <el-tooltip
-                  :content="scope.row.importName"
-                  placement="top"
-                  effect="dark"
-                >
-                  <div class="address-cell">
-                    {{ scope.row.importName }}
-                  </div>
-                </el-tooltip>
-              </template>
-            </el-table-column>
-            <el-table-column prop="importSize" label="文件大小(MB)" width="200">
-            </el-table-column>
+          <el-table
+            :data="Dataer"
+            style="width: 100%"
+            height="500px"
+            v-loading="loadingronghe"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55"> </el-table-column>
             <el-table-column
-              prop="importDescription"
-              label="说明描述"
-              width="200"
+              type="index"
+              label="序号"
+              align="center"
+              width="70"
             >
             </el-table-column>
-            <el-table-column prop="createBy" label="创建人" width="200">
+            <el-table-column
+              prop="remarks"
+              align="center"
+              label="名称"
+              width="170"
+            >
+            </el-table-column>
+            <el-table-column prop="size" label="数量(个)" width="180">
+            </el-table-column>
+            <el-table-column prop="createBy" label="创建人" width="180">
+            </el-table-column>
+            <el-table-column prop="createTime" label="创建时间" width="180">
+            </el-table-column>
+            <el-table-column
+              prop="city"
+              align="center"
+              label="市名称"
+              width="170"
+            >
               <template slot-scope="scope">
                 <el-tooltip
-                  :content="scope.row.createBy"
+                  :content="scope.row.city"
                   placement="top"
                   effect="dark"
                 >
                   <div class="address-cell">
-                    {{ scope.row.createBy }}
+                    {{ scope.row.city }}
                   </div>
                 </el-tooltip>
               </template>
             </el-table-column>
-            <el-table-column prop="createTime" label="创建时间" width="200">
-            </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column
+              prop="county"
+              align="center"
+              label="县名称"
+              width="170"
+            >
               <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  @click="handcodelop(scope.$index, scope.row)"
-                  >下载</el-button
+                <el-tooltip
+                  :content="scope.row.county"
+                  placement="top"
+                  effect="dark"
                 >
+                  <div class="address-cell">
+                    {{ scope.row.county }}
+                  </div>
+                </el-tooltip>
               </template>
             </el-table-column>
+
+            <el-table-column
+              prop="dkOrTb"
+              align="center"
+              label="地块编号"
+              width="170"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="sfwttb"
+              align="center"
+              label="是否问题图斑"
+              width="170"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="qbtbSfnrwfjs"
+              align="center"
+              label="是否纳入违法计算"
+              width="170"
+            >
+            </el-table-column>
+
+            <!-- <el-table-column
+              prop="wyzt"
+              align="center"
+              label="外业状态"
+              width="170"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="tblx"
+              align="center"
+              label="填报类型"
+              width="170"
+            >
+            </el-table-column> -->
+            <el-table-column
+              prop="shengjidxjg"
+              align="center"
+              label="省级定性结果"
+              width="170"
+            >
+            </el-table-column>
+            <el-table-column
+              prop="shijidxjg"
+              align="center"
+              label="市级定性结果"
+              width="170"
+            >
+            </el-table-column>
+
+            <el-table-column
+              prop="dkmj"
+              label="地块面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="nydmj"
+              label="农用地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="gdmj"
+              label="耕地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="tbfl"
+              label="图斑分类"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="pdlx"
+              label="判定类型"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dkmjMax"
+              label="最大地块面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dkmjMin"
+              label="最小地块面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="nydmjMax"
+              label="最大农用地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="nydmjMin"
+              label="最小农用地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="gdmjMax"
+              label="最大耕地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="gdmjMin"
+              label="最小耕地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dydydkmj"
+              label="大于等于地块面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="xydydkmj"
+              label="小于等于地块面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dydynydmj"
+              label="大于等于农用地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="xydynydmj"
+              label="小于等于农用地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="dydygdmj"
+              label="大于等于耕地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="xydygdmj"
+              label="小于等于耕地面积"
+              width="170"
+              align="center"
+            ></el-table-column>
+
+            <el-table-column
+              prop="qbtbCancelStatus"
+              label="销号状态"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="hcjd"
+              label="核查阶段"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="xmlx"
+              label="项目类型"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="zglsqk"
+              label="整改落实情况"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="qtjtqx"
+              label="其他具体情形"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="hfjtqx"
+              label="合法具体情形"
+              width="170"
+              align="center"
+            ></el-table-column>
+            <el-table-column
+              prop="wfsjyt"
+              label="实际用途"
+              width="170"
+              align="center"
+            ></el-table-column>
           </el-table>
         </div>
       </el-dialog>
     </div>
+    <el-dialog
+      title="提示"
+      :visible.sync="forettdialogVisible"
+      width="60%"
+      :before-close="handleClose"
+    >
+      <div style="height: 100%; width: 100%" v-loading="loading">
+        <vue-office-docx :src="urlList" style="width: 100%; height: 600px" />
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="dialogVisiblebo">下载</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
-
-<script>
-import screen from "./screenTwo/screenTwo.vue";
-import config from "../api/document/index";
+  
+  <script>
+import screen from "./Enforcementxiang/screenEn.vue";
+import moment from "moment";
+import VueOfficeDocx from "@vue-office/docx";
+import "@vue-office/docx/lib/index.css";
 import {
-  addProblemPatch,
+  allDatlista2023,
   options,
   areas,
-  exportproblem,
-  batchImport,
-  listfileList,
-  dataDetection,
-  checkList,
-  importList,
+  portproblem2023,
+  importQbtb2023,
+  list2023,
+  importWyhc,
+  computeListjsc2023,
+  addJsc,
+  snapdateallData,
+  importJzjz,
+  shhqkExport2023,
+  jscRh2023,
+  specialsfql2023,
+  fileList02,
 } from "../api/document/index";
 export default {
-  name: "Index",
+  name: "enforCement",
   components: {
     screen,
+    VueOfficeDocx,
   },
   data() {
     return {
+      idrowp: [],
+      ritememarks: "",
+      loadingqingdan: false,
+      loadingronghe: false,
+      forettdialogVisible: false,
+      loadingxlsx: false,
       Dataerinputsearch: "",
       Dataer: [],
       DataListrowscope: [],
@@ -850,39 +1019,22 @@ export default {
       value: "",
       selectDate: null,
       selectedDateValue: null, //时间区间
-      pickerOptions0: {
-        disabledDate: (time) => {
-          if (this.selectDate == null) {
-            return false;
-          } else {
-            return this.selectDate.getFullYear() != time.getFullYear();
-          }
-        },
-
-        onPick: (date) => {
-          // 如果只选择一个则保存至selectDate 否则selectDate 为空
-          if (date.minDate && !date.maxDate) {
-            this.selectDate = date.minDate;
-          } else {
-            this.selectDate = null;
-          }
-        },
-      },
+      valuetime: "",
       inputlist: "",
       allRoles: [],
       //实例对象
       fApi: {},
       //组件参数配置
-      option: {
-        submitBtn: false,
-        // 是否显示重置按钮
-        resetBtn: false,
-        form: {
-          hideRequiredMark: false,
-          layout: "horizontal", //inline
-          labelAlign: "left",
-        },
-      },
+      // option: {
+      //   submitBtn: false,
+      //   // 是否显示重置按钮
+      //   resetBtn: false,
+      //   form: {
+      //     hideRequiredMark: false,
+      //     layout: "horizontal", //inline
+      //     labelAlign: "left",
+      //   },
+      // },
       time: [],
       loaded: false,
       isShowExport: false,
@@ -904,33 +1056,55 @@ export default {
       selectedItems: [],
       pageSize: 10,
       DataListrow: [],
-      formData: {
-        id: "",
-        cancelStatus: "",
+      formData7: {
+        size: "",
+        valuetime: "",
+        selectXZQ: [],
         city: "",
         county: "",
-        freckleCode: "",
         pageNum: 1,
         pageSize: 20,
-        problemType: "",
-        checkJobName: "",
         dkOrTb: "",
-        checkMethod: "",
+        dk_or_tb: "",
         snapdate: "",
-        smzqjd: "",
-        checkDetermineResult: "",
         pdlx: "",
         startDate: "",
         endDate: "",
         shyj: "",
         sfwttb: "",
-        freckleInfractionAreaMax: "",
-        freckleInfractionAreaMin: "",
-        freckleInfractionArableMax: "",
-        freckleInfractionArableMin: "",
-        freckleInfractionFarmlandMax: "",
-        freckleInfractionFarmlandMin: "",
+        dkmj: "",
+        dkmjMax: "",
+        dkmjMin: "",
+        gdmj: "",
+        gdmjMax: "",
+        gdmjMin: "",
+        nydmj: "",
+        nydmjMax: "",
+        nydmjMin: "",
+        dydydkmj: "",
+        xydydkmj: "",
+        dydynydmj: "",
+        xydynydmj: "",
+        dydygdmj: "",
+        xydygdmj: "",
+        qbtbSfnrwfjs: "",
+        wyzt: "",
+        hcjd: "",
+        shengjidxjg: "",
+        shijidxjg: "",
+        qbtbTbly: "",
+        qbtbHchpdlx: "",
+        qbtbCancelStatus: "",
+        remarks: "",
+        tbfl: "",
+        hcjd: "",
+        xmlx: "",
+        zglsqk: "",
+        qtjtqx: "",
+        hfjtqx: "",
+        wfsjyt: "",
       },
+
       month1: [],
       timeS: [
         { label: "1月", value: 1 },
@@ -966,56 +1140,251 @@ export default {
       fileList: [],
       polebodyrow: false,
       Uploadfilelist: false,
+      urlList: [],
+      urlpo: [],
+      permissions: {},
     };
   },
+  created() {
+    this.loadFormData();
+    const storedPermissions = localStorage.getItem("permissions");
+    if (storedPermissions !== null) {
+      this.permissions = JSON.parse(storedPermissions);
+    }
+  },
 
-  watch: {
-    time(newValue, oldValue) {
-      if (newValue && newValue[1]) {
-        let newEndDate = new Date(newValue[1]);
-        newEndDate = new Date(
-          newEndDate.getFullYear(),
-          newEndDate.getMonth() + 1,
-          0
-        );
-        const formattedNewEndDate = this.formatDate(newEndDate);
-
-        // 只有在新的结束日期不等于当前结束日期时才更新
-        if (formattedNewEndDate !== newValue[1]) {
-          this.time = [newValue[0], formattedNewEndDate];
-        }
-      }
-    },
+  mounted() {
+    if (!this.loaded) {
+      this.getXzqhh();
+      this.geOptions();
+      this.loaded = true;
+    }
+    this.checkListt();
+    this.snapdatea();
+    this.findAll();
+    this.listfileList();
+    this.shhqkExpo();
   },
   filters: {
     filterSpecialChars(value) {
       return value.replace(/[^A-Za-z0-9 ]/g, "");
     },
   },
-  mounted() {
-    this.checkListt();
-    const firstDayOfYear = new Date(2023, 0, 1); // 2023年1月1日
-    const lastDayOfYear = new Date(2023, 11, 31); // 2023年12月31日
-    this.time = [
-      this.formatDate(firstDayOfYear),
-      this.formatDate(lastDayOfYear),
-    ];
-    this.listfileList();
-    if (!this.loaded) {
-      this.getXzqhh();
-      this.findAll();
-      // this.getType();
-      this.geOptions();
-      this.loaded = true;
-    }
-    setTimeout(() => {
-      this.$nextTick(() => {
-        this.isShowExport =
-          config.user.funIds != null && config.user.funIds.indexOf(6) > -1;
-      });
-    }, 1000);
+  watch: {
+    formData7: {
+      handler() {
+        this.saveFormData();
+      },
+      deep: true,
+    },
   },
   methods: {
+    handleSelece(val) {
+      // console.log(val, "val");
+      const ids = val.map((item) => item.id);
+      this.idrowp = ids;
+    },
+    shanliop() {
+      // console.log(this.idrowp, "this.idrowp");
+      let ids = this.idrowp.slice();
+      fileList02(ids).then((ok) => {
+        if (ok.code == 200) {
+          this.$message({
+            message: "删除成功",
+            type: "success",
+          });
+        }
+        this.listfileList();
+      });
+    },
+    handleSelectionChange(selectedItems) {
+      this.ritememarks = selectedItems.map((item) => item.remarks).join(",");
+    },
+    DataerhandleSearch() {
+      if (this.ritememarks == "" || this.Dataerinputsearch == "") {
+        this.$message({
+          message: "请填写名称或选择融合数据",
+          type: "warning",
+        });
+      } else {
+        this.loadingronghe = true;
+        let params = {
+          remarks: this.ritememarks,
+          combinationRemarks: this.Dataerinputsearch,
+        };
+        jscRh2023(params).then((ok) => {
+          if (ok.code == 200) {
+            this.loadingronghe = false;
+            this.checkListt();
+          }
+        });
+      }
+    },
+    scshqkbg() {
+      this.forettdialogVisible = true;
+    },
+    shhqkExpo() {
+      const baseUrl = process.env.NODE_ENV === "production" ? "" : "/img";
+      shhqkExport2023().then((ok) => {
+        this.urlpo = ok.msg;
+        const parts = ok.msg.split(":8084");
+        const path = parts[1];
+        if (ok.code == 200) {
+          this.urlList = `${baseUrl}${path}`;
+          console.log(this.urlList, " this.urlList");
+        }
+      });
+    },
+    dialogVisiblebo() {
+      const url = this.urlpo;
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    },
+    saveFormData() {
+      // 创建formDatahut的副本
+      let dataToStore = { ...this.formData7 };
+
+      // 列出所有不需要存储的字段
+      const excludeFields = [
+        "sfwttb",
+        "hcjd",
+        "pdlx",
+        "shengjidxjg",
+        "shijidxjg",
+        "qbtbHchpdlx",
+        "qbtbSfnrwfjs",
+        "qbtbTbly",
+        "tbfl",
+        "qbtbCancelStatus",
+        "hcjd",
+        "xmlx",
+        "zglsqk",
+        "qtjtqx",
+        "hfjtqx",
+        "wfsjyt",
+      ];
+
+      // 循环删除不需要存储的字段
+      excludeFields.forEach((field) => {
+        delete dataToStore[field];
+      });
+      localStorage.setItem("formData7", JSON.stringify(dataToStore));
+    },
+    loadFormData() {
+      const savedData = localStorage.getItem("formData7");
+      if (savedData) {
+        this.formData7 = JSON.parse(savedData);
+      }
+    },
+    // saveFormData() {
+    //   localStorage.setItem("formData7", JSON.stringify(this.formData7));
+    // },
+    // loadFormData() {
+    //   const savedData = localStorage.getItem("formData7");
+    //   if (savedData) {
+    //     this.formData7 = JSON.parse(savedData);
+    //     console.log(savedData, "savedData");
+    //     console.log(this.formData7, "this.formData7");
+    //   }
+    // },
+    beforeRouteLeave(to, from, next) {
+      this.saveFormData();
+      next();
+    },
+    beforeRouteEnter(to, from, next) {
+      next((vm) => {
+        console.log(vm);
+        vm.loadFormData();
+      });
+    },
+    handleDateChange(dates) {
+      if (Array.isArray(dates) && dates.length > 0) {
+        const formattedDates = dates.map((date) =>
+          moment(date).format("YYYY-MM-DD")
+        );
+        this.formData7.startDate = formattedDates[0];
+        this.formData7.endDate = formattedDates[1];
+      } else {
+        this.formData7.startDate = "";
+        this.formData7.endDate = "";
+      }
+    },
+    emitGetData(data) {
+      // console.log(data);
+      this.formData7.sfwttb = data.sfwttb;
+      this.formData7.hcjd = data.hcjd;
+      this.formData7.pdlx = data.tblx;
+      this.formData7.shengjidxjg = data.checkMethod;
+      this.formData7.shijidxjg = data.illegalityType;
+      this.formData7.qbtbHchpdlx = data.hchlxx;
+      this.formData7.qbtbSfnrwfjs = data.deductionType;
+      this.formData7.qbtbTbly = data.tbly;
+      this.formData7.tbfl = data.tbfl;
+      this.formData7.qbtbCancelStatus = data.qbtbCancelstatus;
+
+      this.formData7.hcjd = data.hcjd;
+      this.formData7.xmlx = data.xmlx;
+      this.formData7.zglsqk = data.zglsqk;
+      this.formData7.qtjtqx = data.qtjtqx;
+      this.formData7.hfjtqx = data.hfjtqx;
+      this.formData7.wfsjyt = data.sjyt;
+
+      const updateFormData = (field, value, condition) => {
+        switch (condition) {
+          case "3":
+            this.formData7[field] = value;
+            break;
+          case "1":
+            this.formData7[`${field}Max`] = value;
+            break;
+          case "2":
+            this.formData7[`${field}Min`] = value;
+            break;
+          case "4":
+            this.formData7[`dydy${field}`] = value;
+            break;
+          case "5":
+            this.formData7[`xydy${field}`] = value;
+            break;
+          case "6":
+            const [min, max] = value.split("~");
+            this.formData7[`${field}Max`] = max;
+            this.formData7[`${field}Min`] = min;
+            break;
+        }
+      };
+
+      updateFormData("dkmj", data.MinMax.value, data.MinMax.condition);
+
+      if (data.freck.condition === "4") {
+        this.formData7.dydygdmj = data.freck.value;
+      } else if (data.freck.condition === "5") {
+        this.formData7.xydygdmj = data.freck.value;
+      } else {
+        updateFormData("gdmj", data.freck.value, data.freck.condition);
+      }
+
+      if (data.Cufreck.condition === "4") {
+        this.formData7.dydynydmj = data.Cufreck.value;
+      } else if (data.Cufreck.condition === "5") {
+        this.formData7.xydynydmj = data.Cufreck.value;
+      } else {
+        updateFormData("nydmj", data.Cufreck.value, data.Cufreck.condition);
+      }
+
+      this.findAll(true);
+    },
+    snapdatea() {
+      snapdateallData().then((res) => {
+        this.enabledDateslist = res.data.map((date) =>
+          this.formatDate(new Date(date))
+        );
+      });
+    },
     handleBeforeUpload(file) {
       this.fileList = [];
       this.selectedFile = file;
@@ -1027,32 +1396,13 @@ export default {
         this.$message.error("请先选择一个文件");
         return;
       }
-      this.progressVisible = true;
-      this.uploadProgress = 0;
-
-      // 模拟进度更新
-      const estimatedTime = 30000;
-      let elapsed = 0;
-      const updateInterval = 1000;
-
-      const interval = setInterval(() => {
-        elapsed += updateInterval;
-        // 使用 Math.round() 确保进度值是整数
-        this.uploadProgress = Math.round(
-          Math.min(100, (elapsed / estimatedTime) * 100)
-        );
-
-        if (this.uploadProgress >= 100) {
-          clearInterval(interval);
-        }
-      }, updateInterval);
-
-      batchImport(this.selectedFile)
+      let formData = new FormData();
+      formData.append("file", this.selectedFile);
+      this.loadingxlsx = true;
+      importQbtb2023(formData)
         .then((res) => {
-          clearInterval(interval);
-          this.uploadProgress = 100;
-          this.progressVisible = false;
           if (res.code === 200) {
+            this.loadingxlsx = false;
             this.$message.success("上传成功");
             this.fileList = [];
             this.selectedFile = null;
@@ -1061,45 +1411,43 @@ export default {
             this.$message.error("上传失败：" + res.message);
           }
         })
-        .catch((error) => {
-          clearInterval(interval);
-          this.progressVisible = false;
-          this.$message.error("上传过程中出现错误");
-          console.error("上传错误：", error);
-        });
+        .catch((error) => {});
+    },
+    beforeUploadjzjz() {
+      if (!this.selectedFile) {
+        this.$message.error("请先选择一个文件");
+        return;
+      }
+      let formData = new FormData();
+      formData.append("file", this.selectedFile);
+      this.loadingxlsx = true;
+      importJzjz(formData)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loadingxlsx = false;
+            this.$message.success("上传成功");
+            this.fileList = [];
+            this.selectedFile = null;
+            this.selectedFile = "";
+          } else {
+            this.$message.error("上传失败：" + res.message);
+          }
+        })
+        .catch((error) => {});
     },
     qualityinspection() {
       if (!this.selectedFile) {
         this.$message.error("请先选择一个文件");
         return;
       }
-
-      this.progressVisible = true;
-      this.uploadProgress = 0;
-
-      // 模拟进度更新
-      const estimatedTime = 30000;
-      let elapsed = 0;
-      const updateInterval = 1000;
-
-      const interval = setInterval(() => {
-        elapsed += updateInterval;
-        // 使用 Math.round() 确保进度值是整数
-        this.uploadProgress = Math.round(
-          Math.min(100, (elapsed / estimatedTime) * 100)
-        );
-
-        if (this.uploadProgress >= 100) {
-          clearInterval(interval);
-        }
-      }, updateInterval);
-
-      dataDetection(this.selectedFile).then((res) => {
-        clearInterval(interval);
-        this.uploadProgress = 100;
-        this.progressVisible = false;
+      let formData = new FormData();
+      formData.append("file", this.selectedFile);
+      this.loadingxlsx = true;
+      importWyhc(formData).then((res) => {
         if (res.code === 200) {
-          this.$message.success("数据质检完成,数据无误");
+          this.loadingxlsx = false;
+          this.checkListt();
+          this.$message.success("上传成功");
           this.fileList = [];
           this.selectedFile = null;
           this.selectedFile = "";
@@ -1124,7 +1472,8 @@ export default {
       }
     },
     exportCurrentList() {
-      this.fullscreenVisible = true;
+      // this.fullscreenVisible = true;
+      this.centerVisible = true;
     },
     qualityCheckList() {
       this.polebodyrow = true;
@@ -1138,6 +1487,9 @@ export default {
     },
     handleClosefengt(done) {
       this.progressVisible = false;
+      this.fileList = [];
+      this.selectedFile = null;
+      this.selectedFile = "";
       done();
     },
     handleEdit(index, row) {
@@ -1150,7 +1502,7 @@ export default {
       document.body.removeChild(link);
     },
     listfileList(params) {
-      listfileList(params).then((res) => {
+      specialsfql2023(params).then((res) => {
         this.allData = res.data;
         this.handleCurrentChange1(this.currentPage4);
       });
@@ -1171,53 +1523,36 @@ export default {
       this.DataListrow = this.allData.slice(startIndex, endIndex); // 获取当前页的数据切片
     },
     terDialog() {
-      let data = {
-        city: this.formData.city,
-        county: this.formData.county,
-        startDate: this.formData.startDate,
-        endDate: this.formData.endDate,
-        snapdate: this.formData.snapdate,
-        checkJobName: this.formData.checkJobName,
-        dkOrTb: this.formData.dkOrTb,
-        cancelStatus: this.formData.cancelStatus,
-        freckleInfractionAreaMax: this.formData.freckleInfractionAreaMax,
-        freckleInfractionAreaMin: this.formData.freckleInfractionAreaMin,
-        freckleInfractionArableMax: this.formData.freckleInfractionArableMax,
-        freckleInfractionArableMin: this.formData.freckleInfractionArableMin,
-        freckleInfractionFarmlandMax:
-          this.formData.freckleInfractionFarmlandMax,
-        freckleInfractionFarmlandMin:
-          this.formData.freckleInfractionFarmlandMin,
-        pdlx: this.formData.pdlx,
-        checkDetermineResult: this.formData.checkDetermineResult,
-        checkMethod: this.formData.checkMethod,
-        deductionType: this.formData.deductionType,
-        illegalityType: this.formData.illegalityType,
-        qtjtqx: this.formData.qtjtqx,
-        smzqjd: this.formData.smzqjd,
-        shyj: this.formData.shyj,
-        sfwttb: this.formData.sfwttb,
-        remarks: this.namerow,
-      };
-      axios.post(config.url.addJsc, data).then((res) => {
-        let { code } = res.data;
-        if (code === 200) {
-          this.$message({
-            message: "添加成功",
-            type: "success",
-          });
-          this.namerow = "";
-          this.centerVisible = false;
-        } else if (code === 500) {
-          this.$message({
-            message: "请选择条件",
-            type: "warning",
-          });
-        }
-      });
+      if (this.namerow == "") {
+        this.$message({
+          message: "请填写名称",
+          type: "warning",
+        });
+      } else {
+        this.formData7.remarks = this.namerow;
+        this.formData7.size = this.total;
+        let data = { ...this.formData7 };
+        addJsc(data).then((res) => {
+          if (res.code === 200) {
+            this.checkListt();
+            this.$message({
+              message: "添加成功",
+              type: "success",
+            });
+            this.namerow = "";
+            this.centerVisible = false;
+          } else if (res.code === 500) {
+            this.$message({
+              message: "请选择条件",
+              type: "warning",
+            });
+          }
+        });
+      }
     },
     computing() {
-      this.centerVisible = true;
+      // this.centerVisible = true;
+      this.fullscreenVisible = true;
     },
     moveLeft() {
       if (this.selectedIndex > 0) {
@@ -1288,6 +1623,9 @@ export default {
       this.dialogUploadVisible = true;
       this.title = "批量导入";
     },
+    appli(app) {
+      // console.log(app);
+    },
     geOptions() {
       options().then((res) => {
         if (res.data.code == 200) {
@@ -1301,7 +1639,6 @@ export default {
             this.hcfs.push({ value: ele, label: ele });
           });
         } else {
-          this.$message(res.data.msg);
         }
       });
     },
@@ -1313,38 +1650,7 @@ export default {
       targetObj[maxField] = max;
       targetObj[minField] = min;
     },
-    getFrom(data) {
-      Object.assign(this.formData, data);
 
-      this.assignValuesFromString(
-        this.formData,
-        data.MinMax,
-        "freckleInfractionAreaMin",
-        "freckleInfractionAreaMax"
-      );
-      this.assignValuesFromString(
-        this.formData,
-        data.freck,
-        "freckleInfractionArableMin",
-        "freckleInfractionArableMax"
-      );
-
-      this.assignValuesFromString(
-        this.formData,
-        data.Cufreck,
-        "freckleInfractionFarmlandMin",
-        "freckleInfractionFarmlandMax"
-      );
-
-      this.deductionType = data.deductionType;
-      this.illegalityType = data.illegalityType;
-      this.qtjtqx = data.qtjtqx;
-
-      this.formData.shyj = data.SHYJ;
-      this.formData.smzqjd = data.tabloList;
-      this.formData.sfwttb = data.sfwttb;
-      this.findAll();
-    },
     grouplistrow() {
       this.listfileList();
     },
@@ -1356,41 +1662,15 @@ export default {
     },
 
     exportData() {
-      const load = this.$loading({
-        lock: true,
-        text: "正在下载数据请稍等...",
-        target: document.querySelector("#DataListrow"),
-      });
-      let params = {
-        city: this.formData.city,
-        county: this.formData.county,
-        ssqx: this.formData.ssqx,
-        cancelStatus: this.formData.cancelStatus,
-        checkDetermineResult: this.formData.checkDetermineResult,
-        startDate: this.formData.startDate,
-        endDate: this.formData.endDate,
-        checkJobName: this.formData.checkJobName,
-        dkOrTb: this.formData.dkOrTb,
-        snapdate: this.formData.snapdate,
-        checkMethod: this.formData.checkMethod,
-        sfwttb: this.formData.sfwttb,
-        pdlx: this.formData.pdlx,
-        deductionType: this.deductionType,
-        illegalityType: this.illegalityType,
-        qtjtqx: this.qtjtqx,
-        freckleInfractionArableMax: this.freckleInfractionArableMax,
-        freckleInfractionArableMin: this.freckleInfractionArableMin,
-        freckleInfractionFarmlandMax: this.freckleInfractionFarmlandMax,
-        freckleInfractionAreaMax: this.freckleInfractionAreaMax,
-        freckleInfractionAreaMin: this.freckleInfractionAreaMin,
-        freckleInfractionFarmlandMin: this.freckleInfractionFarmlandMin,
-      };
-      exportproblem(params).then((res) => {
-        if (res.code === 200) {
-          load.close();
-          this.listfileList();
-        }
-      });
+      this.loadingqingdan = true;
+      portproblem2023(this.formData7)
+        .then((res) => {
+          if (res.code === 200) {
+            this.loadingqingdan = false;
+            this.listfileList();
+          }
+        })
+        .finally(() => {});
     },
 
     cancel() {
@@ -1398,9 +1678,7 @@ export default {
     },
     downLoadTemplate() {
       if (this.uploadButton === "模版下载") {
-        window.open(
-          "http://124.114.203.222:8084/wp/file/问题图斑导入模板.xlsx"
-        );
+        window.open("http://124.114.203.222:8084/downloads/批量导入模板.xlsx");
       } else {
         window.open(this.uploadLog);
       }
@@ -1422,14 +1700,12 @@ export default {
             if (res.data.code == 200) {
               load.close();
               this.dialogFormVisible = false;
-              this.$message(res.data.msg);
+
               if (this.title != "修改问题图斑信息") {
                 this.clear();
               } else {
                 this.findAll();
               }
-            } else {
-              this.$message(res.data.msg);
             }
           })
           .catch((error) => {})
@@ -1440,15 +1716,24 @@ export default {
     },
 
     handleEditClick(value) {
+      // this.$message({
+      //   message: "正在开发中",
+      //   type: "success",
+      //   showClose: true,
+      //   duration: 0,
+      // });
+      console.log(value);
       this.$router.push({
-        path: "/wttb_edit",
+        path: "/wttb_edit/fefr",
         query: {
-          id: value.id,
+          // id: value.id,
           landCode: value.landCode,
-          snapdate: this.formData.snapdate,
+          // snapdate: this.formData.snapdate,
           tbbh: value.freckleCode,
+          // dkbh: value.landCode,
         },
       });
+      // this.$router.push({ path: "/details/details", query: params });
     },
     getIndex(index) {
       return this.currentPage - 1 + index;
@@ -1457,8 +1742,11 @@ export default {
       return row.tag === value;
     },
     handleCurrentChange(value) {
-      this.currentPage = value;
-      this.formData.pageNum = value;
+      this.formData7.pageNum = value;
+      this.findAll();
+    },
+    handleSizeli(value) {
+      this.formData7.pageSize = value;
       this.findAll();
     },
     handleEditscope(index, row) {
@@ -1478,25 +1766,22 @@ export default {
       document.body.removeChild(link);
     },
     getXzqhh() {
-      areas()
-        .then((res) => {
-          if (res.code == 200) {
-            res.data.forEach((ele) => {
-              ele["dataList"].forEach((item) => {
-                item["dictName"] = item["dictLabel"];
-              });
-            });
+      areas().then((res) => {
+        console.log(res, "res");
+        if (res.code == 200) {
+          const formattedData = res.data.map((ele) => ({
+            value: ele.dictType,
+            label: ele.dictType,
+            children: ele.xzqx.map((subItem) => ({
+              value: subItem,
+              label: subItem,
+            })),
+          }));
 
-            this.xzq = res.data;
-          } else {
-            this.$message(res.data.msg);
-          }
-        })
-        .catch((error) => {
-          // 显示错误信息
-          this.$message({ message: error });
-        })
-        .finally(() => {});
+          this.xzq = formattedData;
+          console.log(this.xzq);
+        }
+      });
     },
     // getType() {
     //   axios.get(config.url.getProblemTypes).then((res) => {
@@ -1506,13 +1791,20 @@ export default {
     //         this.problemTypes.push({ label: ele, value: ele });
     //       });
     //     } else {
-    //       this.$message(res.data.msg);
+    //
     //     }
     //   });
     // },
+    handleKeyDown(event) {
+      // 检查按键是否为 Enter
+      if (event.key === "Enter" || event.keyCode === 13) {
+        this.findAll();
+      }
+    },
     handleChangeXzq(value) {
-      this.formData.city = "";
-      this.formData.county = "";
+      // console.log(value);
+      this.formData7.city = "";
+      this.formData7.county = "";
       if (value.length) {
         const textArr = [];
         value.map((item, index) => {
@@ -1531,8 +1823,8 @@ export default {
             arr.push(k);
           }
         });
-        this.formData.city = arr.join(",");
-        this.formData.county = county.join(",");
+        this.formData7.city = arr.join(",");
+        this.formData7.county = county.join(",");
       }
     },
     //数组转对象
@@ -1549,68 +1841,44 @@ export default {
         this.enabledDates = res.data.HCRQ.map((date) =>
           this.formatDate(new Date(date))
         );
-        this.enabledDateslist = res.data.YWRQ.map((date) =>
-          this.formatDate(new Date(date))
-        );
       });
-      if (this.time == null || this.time.length < 2) {
-        this.$message({ message: "请选择日期" });
-        return;
-      }
       if (isSearch) {
         this.currentPage = 1;
-        this.formData.pageNum = 1;
+        this.formData7.pageNum = 1;
       }
-
-      function formatDateToCustomString(date) {
-        const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Month is 0-indexed
-        const day = date.getDate().toString().padStart(2, "0");
-        return `${year}-${month}-${day}`;
-      }
-      // 在你的代码中使用这个函数
-      this.formData.startDate =
-        this.time.length > 0
-          ? formatDateToCustomString(new Date(this.time[0]))
-          : "";
-      this.formData.endDate =
-        this.time.length > 1
-          ? formatDateToCustomString(new Date(this.time[1]))
-          : "";
 
       const load = this.$loading({
-        background: "rgba(0, 0, 0, 0.8)",
+        background: "#fff",
         lock: true,
         text: "正在获取...",
-        target: document.querySelector(".el-main"),
+        target: document.querySelector(".tableDatalistrow"),
       });
-      this.formData.userId = localStorage.getItem("id");
-      if (this.formData.code != undefined) {
-        this.formData.code = this.formData.code.replace(/(\s*$)/g, "");
-      }
-      if (this.formData.snapdate) {
-        this.formData.snapdate = this.formatDate(this.formData.snapdate);
+      // this.formData.userId = localStorage.getItem("id");
+      // if (this.formData.code != undefined) {
+      //   this.formData.code = this.formData.code.replace(/(\s*$)/g, "");
+      // }
+      if (this.formData7.snapdate) {
+        this.formData7.snapdate = this.formatDate(this.formData7.snapdate);
       }
 
-      let params = { ...this.formData };
-      addProblemPatch(params)
+      let params = { ...this.formData7 };
+
+      allDatlista2023(params)
         .then((res) => {
           if (res.code == 200) {
             load.close();
-            this.tableData = res.rows;
+            this.tableData = res.data.rows;
             this.tableData.forEach((item, index) => {
               item.index1 = (this.currentPage - 1) * 10 + index + 1;
             });
-            this.total = res.total;
+            this.total = res.data.total;
           }
         })
-        .catch((error) => {
-          console.error("请求出错:", error);
-        });
+        .catch((error) => {});
     },
     clear() {
       this.currentPage = 1;
-      this.formData = {
+      this.formData7 = {
         cancelStatus: "",
         city: "",
         county: "",
@@ -1622,37 +1890,34 @@ export default {
         xzq: "",
       };
       var ye = new Date().getFullYear() + "";
-      this.formData.year = ye;
+      this.formData7.year = ye;
       this.month1 = [];
       this.selectXZQ = [];
       this.findAll();
     },
-    async checkListt(paramsrow, paramsto) {
+    async checkListt() {
       try {
-        let params = { searchValue: paramsrow };
-        let res = await checkList(params);
-        this.DataListrowscope = res.data;
-        let paramsop = { searchValue: paramsto };
-        let resop = await importList(paramsop);
-        this.Dataer = resop.data;
-      } catch (error) {
-        console.error("请求出错", error);
-        this.$message.error("请求出错");
-      }
+        let ok = await computeListjsc2023();
+
+        this.Dataer = ok.data;
+      } catch (error) {}
     },
 
-    handleSinputsize() {
-      this.checkListt(this.inputsize, this.Dataerinputsearch);
-    },
+    handleSinputsize() {},
 
-    DataerhandleSearch() {
-      this.checkListt(this.inputsize, this.Dataerinputsearch);
-    },
+    // DataerhandleSearch() {
+    //   let params = {
+    //     remarks: this.Dataerinputsearch,
+    //   };
+    //   remarksjsc2024(params).then((ok) => {
+    //     this.Dataer = ok.data;
+    //   });
+    // },
   },
 };
 </script>
-
-<style scoped>
+  
+  <style scoped>
 .container {
   height: 100%;
   display: flex;
@@ -1865,39 +2130,48 @@ export default {
   font-size: inherit !important;
   align-items: baseline;
 }
+.title >>> .el-form-item {
+  display: flex;
+}
+.title >>> .el-form-item__label {
+  width: 54px !important;
+}
+.title >>> .el-form-item__content {
+  margin-left: 0px !important;
+}
 .el-row--flex.is-align-middle {
   align-items: initial !important;
 }
 
 .tableDatalistrow >>> .has-gutter {
   color: #1890ff;
-  text-align: center !important;
+  /* text-align: center !important; */
 }
 /* .tableDatalistrow {
-  height: 900px !important;
-} */
+    height: 900px !important;
+  } */
 
 .tableDatalistrow >>> .cell {
-  display: flex !important;
-  align-items: center !important;
-  text-align: center !important;
+  /* display: flex !important; */
+  /* align-items: center !important; */
+  /* text-align: center !important; */
 }
 .elprimary {
   height: 36px;
 }
 
 .dropdown-left {
-  height: 35px !important;
+  height: 37px !important;
 }
 .grouplist {
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
 }
 
 .el-dialoglbody >>> .el-dialog__body {
-  width: 50%;
+  /* width: 50%; */
   text-align: center;
-  margin-left: 233px;
+  /* margin-left: 233px; */
 }
 
 .progressVisiblerow {
@@ -1907,4 +2181,12 @@ export default {
   z-index: 9999;
   margin-left: 24%;
 }
+.isscreen {
+  display: flex;
+  justify-content: space-evenly;
+}
+.flexlist >>> .el-button--medium {
+  height: 36px !important;
+}
 </style>
+  
